@@ -19,55 +19,53 @@ https://developer.chrome.com/docs/extensions/develop/concepts/declare-permission
 
 All permissions required will by default be warned to the user upon installation
 
-"tabs"
-Grants access to the tab object, which allows you to:
+### 🛡️ Extension Permissions Breakdown
 
-See which tabs are open
+#### `"tabs"`
+Grants access to the **tab object**, which allows you to:
+- See which tabs are open
+- Access their URLs
+- Get tab titles
+- Get tab IDs
 
-Access their URLs
+**Note:** You still need `"host_permissions"` to reliably access full URLs on some sites (e.g. `https://` sites due to security restrictions).
 
-Get tab titles
+---
 
-Get tab IDs
-Note: You still need host_permissions to reliably access full URLs on some sites (e.g. https:// due to security restrictions).
-
-"host_permissions"
-Grants permission to match and interact with specific websites based on URL.
+#### `"host_permissions"`
+Grants permission to **match and interact with specific websites** based on their URL.
 
 Tells Chrome:
-
-“I want to access or act on sites like youtube.com, reddit.com, etc.”
+> “I want to access or act on sites like `youtube.com`, `reddit.com`, etc.”
 
 Allows you to:
-
-Monitor when a tab navigates to specific sites
-
-Redirect tabs based on their URL
+- Monitor when a tab navigates to specific sites
+- Redirect tabs based on their URL
 
 Without this, Chrome will block actions like:
+- Injecting scripts into those sites
+- Redirecting tabs targeting those domains
+- Reading full `tab.url` in background/service workers
 
-Injecting scripts into those sites
+---
 
-Redirecting tabs targeting those domains
+#### `"storage"`
+Allows use of `chrome.storage.local` to:
+- Store the whitelist/blacklist
+- Save user settings
 
-Reading full tab.url in background/service workers
+_Alternative:_ `localStorage` (currently not in use).
 
-"storage"
-Allows use of chrome.storage.local to:
+---
 
-Store the whitelist/blacklist
-
-Save user settings
-Alternative: localStorage (currently not in use).
-
-"scripting"
-Grants permission to inject JavaScript into web pages.
+#### `"scripting"`
+Grants permission to **inject JavaScript** into web pages.
 
 Useful for:
+- Changing appearance (e.g. darkening the page)
+- Adding banners or overlays
 
-Changing appearance (e.g. darkening the page)
+**Note:** Loading a static page like `reminder.html` **does not** require the `"scripting"` permission.
 
-Adding banners or overlays
 
-Note: Loading a static page like reminder.html does not require the scripting permission.
 
