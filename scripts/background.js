@@ -21,3 +21,27 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
   }
 });
+
+// Command listener for shortcut
+chrome.commands.onCommand.addListener((command) => {
+  if (command === "add-to-blacklist") {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length === 0) return;
+      const tab = tabs[0];
+      try {
+        const url = new URL(tab.url);
+        const domain = url.hostname.replace(/^www\./, "");
+
+        if (!blacklist.includes(domain)) {
+          blacklist.push(domain);
+          console.log(`Blacklisted: ${domain}`);
+          chrome.tabs.update(tab.id, { url: chrome.runtime.getURL("reminder.html") });
+        } else {
+          console.log(`Already blacklisted: ${domain}`);
+        }
+      } catch (e) {
+        console.warn("Invalid URL", tab.url);
+      }
+    });
+  }
+});

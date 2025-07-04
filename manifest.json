@@ -20,5 +20,14 @@
     "resources": ["reminder.html","images/tokyotech2.png"],
     "matches":["<all_urls>"]
     }
-  ] 
+  ],
+  "commands": {
+    "add-to-blacklist": {
+      "suggested_key": {
+        "default": "Ctrl+B"
+      },
+      "description": "Blacklist current site"
+    }
+  }
+ 
 }
