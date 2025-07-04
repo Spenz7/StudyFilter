@@ -1,17 +1,6 @@
-let blacklist = [];
-let whitelist = [];
+// background.js
 
-// Load from storage
-function loadLists(callback) {
-  chrome.storage.local.get(["blacklist", "whitelist"], (data) => {
-    blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
-    whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
-    console.log("Lists loaded:", { blacklist, whitelist });
-    if (callback) callback();
-  });
-}
-
-// Normalize domain
+// Extract domain from tab URL (strips www. and normalizes case)
 function getDomainFromTab(tab) {
   try {
     const url = new URL(tab.url);
@@ -21,34 +10,39 @@ function getDomainFromTab(tab) {
   }
 }
 
-// Check if domain is in list
-function domainInList(url, list) {
-  return list.some(domain => url.includes(domain));
+// Check if a domain is in a list (exact match)
+function domainInList(domain, list) {
+  return list.includes(domain);
 }
 
-// Redirect logic
+// Redirect logic for blacklisted domains (only if not whitelisted)
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete" && tab.url) {
-    const currentUrl = tab.url;
-    const domain = getDomainFromTab(tab);
-    if (!domain) return;
+  if (changeInfo.status !== "complete" || !tab.url) return;
 
-    chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
-      const whitelist = data.whitelist || [];
-      const blacklist = data.blacklist || [];
+  // Prevent redirect loops — skip internal extension pages
+  if (tab.url.startsWith("chrome-extension://")) return;
 
-      if (whitelist.includes(domain)) return; // allowed
-      if (blacklist.includes(domain)) {
-        chrome.tabs.update(tabId, { url: chrome.runtime.getURL("reminder.html") });
-      }
-    });
-  }
+  const domain = getDomainFromTab(tab);
+  if (!domain) return;
+
+  // Get lists and apply logic
+  chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
+    const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
+    const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
+
+    if (domainInList(domain, whitelist)) return;
+
+    if (domainInList(domain, blacklist)) {
+      console.log(`Redirecting blacklisted domain: ${domain}`);
+      chrome.tabs.update(tabId, { url: chrome.runtime.getURL("reminder.html") });
+    }
+  });
 });
 
-// Add domain
+// Add domain to a list
 function addToList(domain, listName) {
   chrome.storage.local.get([listName], (data) => {
-    const list = Array.isArray(data[listName]) ? data[listName] : [];
+    let list = Array.isArray(data[listName]) ? data[listName] : [];
     if (!list.includes(domain)) {
       list.push(domain);
       chrome.storage.local.set({ [listName]: list }, () => {
@@ -60,10 +54,10 @@ function addToList(domain, listName) {
   });
 }
 
-// Remove domain
+// Remove domain from a list
 function removeFromList(domain, listName) {
   chrome.storage.local.get([listName], (data) => {
-    const list = Array.isArray(data[listName]) ? data[listName] : [];
+    let list = Array.isArray(data[listName]) ? data[listName] : [];
     const index = list.indexOf(domain);
     if (index !== -1) {
       list.splice(index, 1);
@@ -76,33 +70,38 @@ function removeFromList(domain, listName) {
   });
 }
 
-// Handle shortcut commands
+// Handle keyboard shortcut commands
 chrome.commands.onCommand.addListener((command) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length === 0) return;
-    const domain = getDomainFromTab(tabs[0]);
-    if (!domain) return;
+
+    const tab = tabs[0];
+    const domain = getDomainFromTab(tab);
+    if (!domain) {
+      console.warn("Could not extract domain from tab URL.");
+      return;
+    }
 
     switch (command) {
       case "add-to-blacklist":
         addToList(domain, "blacklist");
-        chrome.tabs.update(tabs[0].id, { url: chrome.runtime.getURL("reminder.html") });
+        chrome.tabs.update(tab.id, { url: chrome.runtime.getURL("reminder.html") });
         break;
+
       case "remove-from-blacklist":
         removeFromList(domain, "blacklist");
         break;
+
       case "add-to-whitelist":
         addToList(domain, "whitelist");
         break;
+
       case "remove-from-whitelist":
         removeFromList(domain, "whitelist");
         break;
+
       default:
         console.log("Unknown command:", command);
     }
   });
 });
-
-// Load lists on startup
-chrome.runtime.onInstalled.addListener(() => loadLists());
-chrome.runtime.onStartup.addListener(() => loadLists());
