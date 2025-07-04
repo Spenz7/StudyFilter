@@ -19,25 +19,55 @@ https://developer.chrome.com/docs/extensions/develop/concepts/declare-permission
 
 All permissions required will by default be warned to the user upon installation
 
-"tabs" -> gain access to the tab object, which allows one to see:
-    a)which tabs are open
-    b)their URLs
-    c)their titles
-    d)their IDs
-    Note: Still need host_permissions to see some URLs fully (e.g. due to security reasons on https:// sites)
+"tabs"
+Grants access to the tab object, which allows you to:
 
-"host_permissions" -> to match and interact with web pages based on URL
--->Tells Chrome:
-“I want to access or act on youtube.com, reddit.com, etc.”
--->monitor when a tab goes to e.g. youtube.com
--->redirect based on its URL
--->Without it, Chrome blocks actions like:
-    a)Injecting scripts into that site
-    b)Redirecting tabs targeting that site
-    c)Even seeing full tab.url reliably in service workers
+See which tabs are open
 
-"storage" -> to allow usage of chrome.storage.local to store whitelist/blacklist and user settings, alternative is local storage (currently not in use)
+Access their URLs
 
-"scripting" -> to inject JS code into pages e.g. darken the page, add a banner.
---> Note: loading static pages i.e. reminder.html does NOT require scripting permission
+Get tab titles
+
+Get tab IDs
+Note: You still need host_permissions to reliably access full URLs on some sites (e.g. https:// due to security restrictions).
+
+"host_permissions"
+Grants permission to match and interact with specific websites based on URL.
+
+Tells Chrome:
+
+“I want to access or act on sites like youtube.com, reddit.com, etc.”
+
+Allows you to:
+
+Monitor when a tab navigates to specific sites
+
+Redirect tabs based on their URL
+
+Without this, Chrome will block actions like:
+
+Injecting scripts into those sites
+
+Redirecting tabs targeting those domains
+
+Reading full tab.url in background/service workers
+
+"storage"
+Allows use of chrome.storage.local to:
+
+Store the whitelist/blacklist
+
+Save user settings
+Alternative: localStorage (currently not in use).
+
+"scripting"
+Grants permission to inject JavaScript into web pages.
+
+Useful for:
+
+Changing appearance (e.g. darkening the page)
+
+Adding banners or overlays
+
+Note: Loading a static page like reminder.html does not require the scripting permission.
 
