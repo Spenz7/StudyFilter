@@ -1,10 +1,24 @@
 {
-  "name": "Hello Extensions of the world",
-  "description": "Base Level Extension",
-  "version": "1.0",
   "manifest_version": 3,
+  "name": "StudyFilter",
+  "version": "1.0",
+  "description": "Block distracting sites and stay focused on your goals",
+
+  
+  "permissions":["tabs","storage","scripting"],
+  "host_permissions":["<all_urls>"],
+
   "action": {
     "default_popup": "popup/hello.html",
     "default_icon": "images/hello_extensions.png"
-  }
+  },
+  "background":{
+    "service_worker":"scripts/background.js"
+  },
+  "web_accessible_resources": [
+    {
+    "resources": ["reminder.html"],
+    "matches":["<all_urls>"]
+    }
+  ] 
 }
