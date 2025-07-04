@@ -1,2 +1,3 @@
-Intend to add keyboard shortcuts to allow user to manually white/blacklist websites if needed
+Intend to add keyboard shortcuts to allow user to manually white/blacklist websites if needed.
+
 As of now, no whitelist and blacklist is hardcoded. Will have to redo with chrome.storage for info to persist across sessions.
