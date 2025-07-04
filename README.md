@@ -20,9 +20,10 @@ For full details, see:
 https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions
 
 > **Note:** All permissions required will, by default, be warned to the user upon installation.
-**Note:** As of now, chrome.storage technically isn't needed as there's no option to save one's custom white/blacklist. There is currently only a hardcoded blacklist which
-will have to be modified manually via background.js
+
 ---
+### Note: As of now, chrome.storage technically isn't needed as there's no option to save one's custom white/blacklist. There is currently only a hardcoded blacklist which
+will have to be modified manually via background.js
 
 ## 🛡️ Extension Permissions Breakdown
 
