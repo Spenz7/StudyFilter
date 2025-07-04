@@ -24,6 +24,8 @@ https://developer.chrome.com/docs/extensions/develop/concepts/declare-permission
 ---
 ### Note: As of now, chrome.storage technically isn't needed as there's no option to save one's custom white/blacklist. There is currently only a hardcoded blacklist which will have to be modified manually via background.js
 
+### Note: To have your own custom image, upload it under the image folder and name it as reminder.png, do delete the reminder.png that's already there before though as you can't have >= 2 files named reminder.png
+
 ## 🛡️ Extension Permissions Breakdown
 
 ### Two main types of permissions in `manifest.json`
