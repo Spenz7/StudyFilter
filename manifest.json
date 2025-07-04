@@ -20,34 +20,6 @@
     "resources": ["reminder.html","images/tokyotech2.png"],
     "matches":["<all_urls>"]
     }
-  ],
-  "commands": {
-    "add-to-blacklist": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+Y"
-      },
-      "description": "Add current site to blacklist"
-    },
-    "remove-from-blacklist": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+L"
-      },
-      "description": "Remove current site from blacklist"
-    },
-    "add-to-whitelist": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+U"
-      },
-      "description": "Add current site to whitelist"
-    },
-    "remove-from-whitelist": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+K"
-      },
-      "description": "Remove current site from whitelist"
-    }
-  }
-
-
+  ]
  
 }
