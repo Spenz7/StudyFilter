@@ -17,7 +17,7 @@
   },
   "web_accessible_resources": [
     {
-    "resources": ["reminder.html"],
+    "resources": ["reminder.html","images/tokyotech2.png"],
     "matches":["<all_urls>"]
     }
   ] 
