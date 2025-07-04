@@ -1,4 +1,5 @@
-Tutorial link: https://developer.chrome.com/docs/extensions/get-started
+Tutorial link: https://youtu.be/Y2oZy6N_VHo
+Guide that I used to learn: https://developer.chrome.com/docs/extensions/get-started
 
 Workflow:
 GitHub repo ←→ Cloned folder on your PC ←→ Chrome extension (unpacked)
