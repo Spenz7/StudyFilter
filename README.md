@@ -11,7 +11,7 @@ Update methods:
 | --------------------- | -------------------------------------------------------------------- |
 | **Popup**             | The small UI window that shows when you click your extension’s icon. |
 | **popup.html**        | The HTML page that renders inside this popup.                        |
-| **popup.js**          | The JavaScript file that runs inside the popup page.                 |
+| **popup.js**          | The JavaScript file that runs inside the popup page. Currently no use but may need in the future.|
 | **Background script** | Runs independently in the background, not visible to user.           |
 
 # Permissions Needed
@@ -20,7 +20,8 @@ For full details, see:
 https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions
 
 > **Note:** All permissions required will, by default, be warned to the user upon installation.
-
+> **Note:** As of now, chrome.storage technically isn't needed as there's no option to save one's custom white/blacklist. There is currently only a hardcoded blacklist which
+> will have to be modified manually via background.js
 ---
 
 ## 🛡️ Extension Permissions Breakdown
