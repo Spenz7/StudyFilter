@@ -23,7 +23,7 @@ https://developer.chrome.com/docs/extensions/develop/concepts/declare-permission
 
 ---
 ### Note: As of now, chrome.storage technically isn't needed as there's no option to save one's custom white/blacklist. There is currently only a hardcoded blacklist which
-will have to be modified manually via background.js
+### will have to be modified manually via background.js
 
 ## 🛡️ Extension Permissions Breakdown
 
