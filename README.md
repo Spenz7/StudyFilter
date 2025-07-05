@@ -1,11 +1,13 @@
 Tutorial link: https://youtu.be/Y2oZy6N_VHo
 
+Note: You have to enable developer mode first to be able to load the unpacked extension onto the Chromium browser (e.g. Chrome, Brave, Edge, Opera, Vivald)
+
 Guide that I used to learn from: https://developer.chrome.com/docs/extensions/get-started
 
 Workflow:
 GitHub repo ←→ Cloned folder on your PC ←→ Chrome extension (unpacked)
 
-Update methods:
+Method I use to implemenet new changes:
 1) Edit Cloned folder -> Reload Chrome Extension & push changes onto Github repo (to avoid conflicts)
 2) Edit Github repo -> Cloned folder to pull changes -> Reload Chrome Extension
 
