@@ -7,7 +7,7 @@ Guide that I used to learn from: https://developer.chrome.com/docs/extensions/ge
 Workflow:
 GitHub repo ←→ Cloned folder on your PC ←→ Chrome extension (unpacked)
 
-Method I use to implemenet new changes:
+Methods I use to implemenet new changes:
 1) Edit Cloned folder -> Reload Chrome Extension & push changes onto Github repo (to avoid conflicts)
 2) Edit Github repo -> Cloned folder to pull changes -> Reload Chrome Extension
 
