@@ -1,4 +1,4 @@
-Tutorial link: https://youtu.be/Y2oZy6N_VHo
+Tutorial link: https://youtu.be/f7HSxo7SUxQ
 
 Note: You have to enable developer mode first to be able to load the unpacked extension onto the Chromium browser (e.g. Chrome, Brave, Edge, Opera, Vivald)
 
