@@ -1,4 +1,4 @@
-## Usage
+### Usage
 
 - The extension blocks or allows websites based on your whitelist and blacklist.
 - Customize your lists through the popup UI.
