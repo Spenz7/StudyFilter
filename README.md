@@ -4,13 +4,16 @@
 
 ## Installation
 
-1. Clone this repository to your local machine: git clone https://github.com/Spenz7/StudyFilter.git
+1. Clone this repository to your local machine:
+   ```bash
+   git clone https://github.com/Spenz7/StudyFilter.git
+   ```
 
-2. Open your Chromium-based browser (Chrome, Brave, Edge, Opera, Vivaldi).
+3. Open your Chromium-based browser (Chrome, Brave, Edge, Opera, Vivaldi).
 
-3. Enable Developer Mode in the Extensions page.
+4. Enable Developer Mode in the Extensions page.
 
-4. Load the unpacked extension:
+5. Load the unpacked extension:
 - Click **Load unpacked** and select the cloned `StudyFilter` folder.
 
 ## Usage
