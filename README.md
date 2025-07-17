@@ -25,5 +25,5 @@ Tutorial link: https://youtu.be/yYXHyesJgPA
 
 **Disclaimer:**
 
-- I am still working on a method to restrict YouTube content to only academic-related videos, possibly using keyword filtering or AI—this may require funding.
+- I am still working on a method to restrict YouTube content to only academic-related videos, possibly using keyword filtering or AI
 - This extension works well with Reddit. For example, if you want to only view posts from [https://www.reddit.com/r/NTU/](https://www.reddit.com/r/NTU/), whitelist that URL and blacklist [https://www.reddit.com/](https://www.reddit.com/) to block all other subreddits.
