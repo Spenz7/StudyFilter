@@ -1,12 +1,13 @@
 Tutorial link: https://youtu.be/f7HSxo7SUxQ
 
-Installation
-Clone this repository to your local machine:
+# StudyFilter Extension
 
-bash
-Copy
-Edit
-git clone https://github.com/Spenz7/StudyFilter.git
+## Installation
+
+1. Clone this repository to your local machine:
+
+   ```bash
+   git clone https://github.com/Spenz7/StudyFilter.git
 Open your Chromium-based browser (Chrome, Brave, Edge, Opera, Vivaldi).
 
 Enable Developer Mode in the Extensions page.
@@ -25,7 +26,7 @@ When a site is blocked, a reminder page will be shown.
 Updating
 To update your local copy with the latest changes:
 
-nginx
+bash
 Copy
 Edit
 git pull
@@ -35,5 +36,8 @@ Reporting Issues and Contributing
 Report bugs or request features via GitHub Issues.
 
 Contributions are welcome via pull requests.
+
+Additional Resources
+For detailed developer instructions, see the Developer Guide.
 
 
