@@ -28,8 +28,9 @@ git pull
 ```
 After pulling updates, reload the extension in your browser’s Extensions page to apply changes.
 
-Reporting Issues and Contributing
-Report bugs or request features via GitHub Issues.
+## Reporting Issues and Contributing
 
-Contributions are welcome via pull requests.
+- Report bugs or request features via GitHub Issues.
+
+- Contributions are welcome via pull requests.
 
