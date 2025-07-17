@@ -1,13 +1,5 @@
 // background.js
 
-const BLOCKED_DOMAINS = [
-  "youtube.com",
-  "reddit.com",
-  "instagram.com",
-  "facebook.com",
-  "linkedin.com"
-];
-
 // Extract domain from tab URL (strips www. and normalizes case)
 function getDomainFromTab(tab) {
   try {
@@ -18,18 +10,34 @@ function getDomainFromTab(tab) {
   }
 }
 
-// Redirect logic for hardcoded blacklisted domains
+// Check if domain is in a list (exact match or subdomain)
+function domainInList(domain, list) {
+  return list.some(blocked => domain === blocked || domain.endsWith("." + blocked));
+}
+
+// Main redirect logic
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete" || !tab.url) return;
   if (tab.url.startsWith("chrome-extension://")) return;
 
-  const domain = getDomainFromTab(tab);
-  if (!domain) return;
+  const url = tab.url;
+  if (!url) return;
 
-  if (BLOCKED_DOMAINS.some(blocked => domain === blocked || domain.endsWith("." + blocked))) {
-    // Already on reminder.html? Don't redirect again.
-    if (!tab.url.endsWith("reminder.html")) {
-      chrome.tabs.update(tabId, { url: chrome.runtime.getURL("reminder.html") });
+  chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
+    const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
+    const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
+
+    // 1. Whitelist check (prefix match)
+    if (whitelist.some(prefix => url.startsWith(prefix))) return;
+
+    // 2. Blacklist check (prefix match)
+    if (blacklist.some(prefix => url.startsWith(prefix))) {
+      if (!url.endsWith("reminder.html")) {
+        chrome.storage.local.set({ lastBlockedDomain: url }, () => {
+          chrome.tabs.update(tabId, { url: chrome.runtime.getURL("reminder.html") });
+        });
+      }
     }
-  }
+    // 3. Otherwise, do nothing (allow page)
+  });
 });

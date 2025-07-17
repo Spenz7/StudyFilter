@@ -11,17 +11,29 @@
   <body>
     <!-- body section content is what users see upon opening the popup-->
     <h1>Do ur best!</h1>
+
+    <!-- Add these buttons and status div -->
+    <button id="add-whitelist">Add to Whitelist</button>
+    <button id="remove-whitelist">Remove from Whitelist</button>
+    <button id="add-blacklist">Add to Blacklist</button>
+    <button id="remove-blacklist">Remove from Blacklist</button>
+    <div id="status"></div>
+
+    <div>
+      <strong>Whitelist:</strong>
+      <ul id="whitelist-list"></ul>
+    </div>
+    <div>
+      <strong>Blacklist:</strong>
+      <ul id="blacklist-list"></ul>
+    </div>
+
     <!-- Script is a JS file that does sth in ur extension-->
     <!-- popup.js runs when the popup opens-->
     <!--Run the Js file pop.js inside this popup window-->
-    <script src="../scripts/popup.js"></script></script>
+    <script src="../scripts/popup.js"></script>
+    <!--Placing <script src="../scripts/popup.js"></script> after your buttons
+    and status div ensures that the DOM elements exist when your JavaScript runs.-->
 
-    <p>Keyboard shortcuts available:</p>
-    <ul>
-      <li>Ctrl + Shift + Y - Add current site to Blacklist</li>
-      <li>Ctrl + Shift + L - Remove current site from Blacklist</li>
-      <li>Ctrl + Shift + U - Add current site to Whitelist</li>
-      <li>Ctrl + Shift + K - Remove current site from Whitelist</li>
-    </ul>
   </body>
 </html>
