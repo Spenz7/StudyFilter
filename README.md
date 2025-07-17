@@ -1,39 +1,28 @@
-# StudyFilter Extension
-
-**Tutorial link:** [https://youtu.be/f7HSxo7SUxQ](https://youtu.be/f7HSxo7SUxQ)
-
-## Installation
-
-1. Clone this repository to your local machine:
-   ```bash
-   git clone https://github.com/Spenz7/StudyFilter.git
-   ```
-
-3. Open your Chromium-based browser (Chrome, Brave, Edge, Opera, Vivaldi).
-
-4. Enable Developer Mode in the Extensions page.
-
-5. Load the unpacked extension:
-- Click **Load unpacked** and select the cloned `StudyFilter` folder.
-
 ## Usage
 
 - The extension blocks or allows websites based on your whitelist and blacklist.
 - Customize your lists through the popup UI.
 - When a site is blocked, a reminder page will be shown.
 
-## Updating
+**Logic:**
 
-To update your local copy with the latest changes:
+- Whenever you visit a website:
+  - Check if the URL is in the whitelist first.
+    - If yes, stop checking and allow the site.
+  - If no, check if it’s in the blacklist.
+    - If yes, block the site and display `reminder.html`.
+    - If no, display the page normally.
+  - While visiting any website, you can click on the extension popup to add or remove that website from the whitelist or blacklist.
 
-```bash
-git pull
-```
-After pulling updates, reload the extension in your browser’s Extensions page to apply changes.
+**Customizing the Reminder Page:**
 
-## Reporting Issues and Contributing
+- To change the design of the reminder webpage, modify the `reminder.html` file. (You can use AI tools to help with editing.)
+- To use your own custom image:
+  - Upload your image to the `image` folder.
+  - Name it `reminder.png`.
+  - Make sure to delete the existing `reminder.png` in that folder before uploading, as you cannot have two files with the same name.
 
-- Report bugs or request features via GitHub Issues.
+**Disclaimer:**
 
-- Contributions are welcome via pull requests.
-
+- I am still working on a method to restrict YouTube content to only academic-related videos, possibly using keyword filtering or AI—this may require funding.
+- This extension works well with Reddit. For example, if you want to only view posts from [https://www.reddit.com/r/NTU/](https://www.reddit.com/r/NTU/), whitelist that URL and blacklist [https://www.reddit.com/](https://www.reddit.com/) to block all other subreddits.
