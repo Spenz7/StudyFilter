@@ -1,43 +1,35 @@
-Tutorial link: https://youtu.be/f7HSxo7SUxQ
-
 # StudyFilter Extension
+
+**Tutorial link:** [https://youtu.be/f7HSxo7SUxQ](https://youtu.be/f7HSxo7SUxQ)
 
 ## Installation
 
-1. Clone this repository to your local machine:
+1. Clone this repository to your local machine: git clone https://github.com/Spenz7/StudyFilter.git
 
-   ```bash
-   git clone https://github.com/Spenz7/StudyFilter.git
-Open your Chromium-based browser (Chrome, Brave, Edge, Opera, Vivaldi).
+2. Open your Chromium-based browser (Chrome, Brave, Edge, Opera, Vivaldi).
 
-Enable Developer Mode in the Extensions page.
+3. Enable Developer Mode in the Extensions page.
 
-Load the unpacked extension:
+4. Load the unpacked extension:
+- Click **Load unpacked** and select the cloned `StudyFilter` folder.
 
-Click Load unpacked and select the cloned StudyFilter folder.
+## Usage
 
-Usage
-The extension blocks or allows websites based on your whitelist and blacklist.
+- The extension blocks or allows websites based on your whitelist and blacklist.
+- Customize your lists through the popup UI.
+- When a site is blocked, a reminder page will be shown.
 
-Customize your lists through the popup UI.
+## Updating
 
-When a site is blocked, a reminder page will be shown.
-
-Updating
 To update your local copy with the latest changes:
 
-bash
-Copy
-Edit
+```bash
 git pull
+```
 After pulling updates, reload the extension in your browser’s Extensions page to apply changes.
 
 Reporting Issues and Contributing
 Report bugs or request features via GitHub Issues.
 
 Contributions are welcome via pull requests.
-
-Additional Resources
-For detailed developer instructions, see the Developer Guide.
-
 
