@@ -2,7 +2,7 @@
 import { callAI } from './providers/index.js';
 
 export async function isRelevantToTopics(phrase, allowedTopics) {
-  const prompt = `Is the following phrase related to any of these topics? Answer with only "Yes" or "No".
+  const prompt = `Is the following phrase related to any of these topics, even if it contains minor typos or misspellings? Answer with only "Yes" or "No".
 
 Phrase: "${phrase}"
 Topics: ${allowedTopics.join(", ")}`;

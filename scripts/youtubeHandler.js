@@ -5,25 +5,27 @@ export async function handleYouTube(tabId, url) {
     const urlObj = new URL(url);
     const params = urlObj.searchParams;
 
-    // Check if this is a search results page with a query
+    // Handle YouTube search query filtering
     if (params.has('search_query')) {
       const searchQuery = params.get('search_query');
 
-      // Load allowedTopics from storage
       chrome.storage.local.get(['allowedTopics'], async (data) => {
         const allowedTopics = Array.isArray(data.allowedTopics) ? data.allowedTopics : [];
 
-        const relevant = await isRelevantToTopics(searchQuery, allowedTopics);
+        const isRelevant = await isRelevantToTopics(searchQuery, allowedTopics);
 
-        if (!relevant) {
-          // Redirect to reminder page if not relevant
-          chrome.tabs.update(tabId, { url: chrome.runtime.getURL('reminder.html') });
+        if (!isRelevant) {
+          chrome.tabs.update(tabId, {
+            url: chrome.runtime.getURL('reminder.html'),
+          });
         }
       });
+
+      return; // Early return; we don’t want to continue to video handler if already handled
     }
 
-    // TODO: handle video page (watch?v=...) later
-
+    // TODO: Step 6 — Handle YouTube video titles (watch?v=...)
+    
   } catch (e) {
     console.error('Error in handleYouTube:', e);
   }
