@@ -1,17 +1,13 @@
-import { setupRedditHandlers } from "./redditUI.js";
+import { setupRedditHandlers, updateLists } from "./redditUI.js";
 import { setupYouTubeHandlers } from "./youtubeUI.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   setupRedditHandlers();
   setupYouTubeHandlers();
 
-  // 1) Initialize filterLevel in storage (default to 'lenient'),
-  //    then update the UI toggle/radio buttons accordingly.
+  // Initialize filter level
   chrome.storage.local.get({ filterLevel: 'lenient' }, ({ filterLevel }) => {
-    // ensure the key is set
     chrome.storage.local.set({ filterLevel });
-
-    // update UI state (assumes these are radio inputs or toggles)
     const strictBtn = document.getElementById("strictFilter");
     const lenientBtn = document.getElementById("lenientFilter");
     if (filterLevel === 'strict') {
@@ -21,7 +17,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 2) Click handlers to change mode
+  // Restore dropdown states and then update lists
+  restoreDropdownState("whitelist-list", "whitelist-toggle", "whitelistOpen");
+  restoreDropdownState("blacklist-list", "blacklist-toggle", "blacklistOpen");
+
+  // Call updateLists to fill dropdowns on popup load
+  updateLists();
+
+  // Setup filter mode click handlers
   document.getElementById("strictFilter").addEventListener("click", () => {
     chrome.storage.local.set({ filterLevel: 'strict' }, () => {
       alert("Filter set to strict.");
@@ -33,15 +36,36 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Filter set to lenient.");
     });
   });
-});
 
-document.querySelectorAll('.dropdown-toggle').forEach(button => {
-  button.addEventListener('click', () => {
-    const targetId = button.getAttribute('data-target');
-    const list = document.getElementById(targetId);
-    list.classList.toggle('show');
-    button.textContent = button.textContent.includes('▼')
-      ? button.textContent.replace('▼', '▲')
-      : button.textContent.replace('▲', '▼');
+  // Dropdown toggle handlers
+  document.getElementById("whitelist-toggle").addEventListener("click", () => {
+    const list = document.getElementById("whitelist-list");
+    const toggle = document.getElementById("whitelist-toggle");
+    const isOpen = list.classList.toggle("hidden") === false;
+    toggle.textContent = `Whitelist ${isOpen ? "▲" : "▼"}`;
+    chrome.storage.local.set({ whitelistOpen: isOpen });
+  });
+
+  document.getElementById("blacklist-toggle").addEventListener("click", () => {
+    const list = document.getElementById("blacklist-list");
+    const toggle = document.getElementById("blacklist-toggle");
+    const isOpen = list.classList.toggle("hidden") === false;
+    toggle.textContent = `Blacklist ${isOpen ? "▲" : "▼"}`;
+    chrome.storage.local.set({ blacklistOpen: isOpen });
   });
 });
+
+function restoreDropdownState(id, toggleId, storageKey) {
+  chrome.storage.local.get(storageKey, (result) => {
+    const isOpen = result[storageKey];
+    const content = document.getElementById(id);
+    const header = document.getElementById(toggleId);
+    if (isOpen) {
+      content.classList.remove("hidden");
+      header.textContent = header.textContent.replace("▼", "▲");
+    } else {
+      content.classList.add("hidden");
+      header.textContent = header.textContent.replace("▲", "▼");
+    }
+  });
+}

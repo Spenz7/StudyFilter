@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -16,16 +17,16 @@
     <div id="status"></div>
 
     <div class="dropdown">
-      <button class="dropdown-toggle" data-target="whitelist-list">Whitelist ▼</button>
-      <ul id="whitelist-list" class="collapsible-list"></ul>
+      <button id="whitelist-toggle" class="dropdown-toggle">Whitelist ▼</button>
+      <ul id="whitelist-list" class="collapsible-list hidden"></ul>
     </div>
 
     <div class="dropdown">
-      <button class="dropdown-toggle" data-target="blacklist-list">Blacklist ▼</button>
-      <ul id="blacklist-list" class="collapsible-list"></ul>
+      <button id="blacklist-toggle" class="dropdown-toggle">Blacklist ▼</button>
+      <ul id="blacklist-list" class="collapsible-list hidden"></ul>
     </div>
 
-    <h3>Youtube Filtering Level</h3>
+    <h3>YouTube Filtering Level</h3>
     <p class="disclaimer">
       Default filtering mode is <strong>Lenient</strong>. You can switch to Strict mode below.
     </p>

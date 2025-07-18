@@ -62,12 +62,13 @@ label {
   margin-bottom: 4px;
 }
 
+/* Show the collapsible list by default; hide only when .hidden is applied */
 .collapsible-list {
   list-style-type: disc;
   margin-top: 4px;
-  display: none;
+  display: block;
 }
 
-.collapsible-list.show {
-  display: block;
+.hidden {
+  display: none;
 }
