@@ -12,10 +12,11 @@
     "default_popup": "popup/popup.html",
     "default_icon": "images/logo.png"
   },
-  "background":{
-    "service_worker":"scripts/background.js",
+  "background": {
+    "service_worker": "scripts/background.js",
     "type": "module"
   },
+
   "web_accessible_resources": [
     {
     "resources": ["reminder.html","images/reminder.png"],
