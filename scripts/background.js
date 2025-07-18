@@ -1,7 +1,7 @@
-import { handleReddit } from './redditHandler.js';
-import { handleYouTube } from './youtubeHandler.js';
+import { handleReddit } from './reddithandler.js';
+import { handleYouTube } from './youtubehandler.js';
 
-console.log("Service worker loaded");
+console.log("Background script loaded");
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status !== "complete" || !tab.url) return;

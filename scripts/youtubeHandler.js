@@ -1,31 +1,32 @@
-import { isRelevantToTopics } from './aiCheck.js';
+import { isRelevantToTopics } from './aicheck.js';
+
+function getStorage(keys) {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(keys, (result) => resolve(result));
+  });
+}
 
 export async function handleYouTube(tabId, url) {
   try {
     const urlObj = new URL(url);
     const params = urlObj.searchParams;
 
-    // Handle YouTube search query filtering
     if (params.has('search_query')) {
       const searchQuery = params.get('search_query');
 
-      chrome.storage.local.get(['allowedTopics'], async (data) => {
-        const allowedTopics = Array.isArray(data.allowedTopics) ? data.allowedTopics : [];
+      // Await storage retrieval as a Promise
+      const data = await getStorage(['allowedTopics']);
+      const allowedTopics = Array.isArray(data.allowedTopics) ? data.allowedTopics : [];
 
-        const isRelevant = await isRelevantToTopics(searchQuery, allowedTopics);
+      const relevant = await isRelevantToTopics(searchQuery, allowedTopics);
 
-        if (!isRelevant) {
-          chrome.tabs.update(tabId, {
-            url: chrome.runtime.getURL('reminder.html'),
-          });
-        }
-      });
-
-      return; // Early return; we don’t want to continue to video handler if already handled
+      if (!relevant) {
+        await chrome.tabs.update(tabId, { url: chrome.runtime.getURL('reminder.html') });
+      }
     }
 
-    // TODO: Step 6 — Handle YouTube video titles (watch?v=...)
-    
+    // TODO: handle video page (watch?v=...) later
+
   } catch (e) {
     console.error('Error in handleYouTube:', e);
   }
