@@ -1,3 +1,4 @@
+//scripts/providers/openai.js
 import { OPENAI_API_KEY } from '../config.js';
 
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';

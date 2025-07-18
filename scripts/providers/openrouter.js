@@ -1,3 +1,4 @@
+//scripts/providers/openRouter.js
 import { OPENROUTER_API_KEY } from '../config.js';
 
 const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
