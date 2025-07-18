@@ -10,7 +10,6 @@
   </head>
   <body>
     <!-- body section content is what users see upon opening the popup-->
-    <h1>Do ur best!</h1>
 
     <!-- Add these buttons and status div -->
     <h3>Reddit Preferences</h3>
@@ -30,7 +29,14 @@
     </div>
 
     <div style="margin-top: 20px;">
-      <h3>YouTube Topic Preferences</h3>
+
+      <div style="margin-top: 20px;">
+        <h3>Filtering Level
+        <button id="strictFilter">Strict</button>
+        <button id="lenientFilter">Lenient</button>
+        </h3>
+      </div>
+
       <label for="topicInput">Topic:</label>
       <input type="text" id="topicInput" placeholder="e.g. cooking">
       <button id="submitTopic">Submit</button>

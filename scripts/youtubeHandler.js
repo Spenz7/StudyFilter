@@ -1,3 +1,4 @@
+// youtubehandler.js
 import { isRelevantToTopics } from './aicheck.js';
 
 function getStorage(keys) {
@@ -14,11 +15,17 @@ export async function handleYouTube(tabId, url) {
     if (params.has('search_query')) {
       const searchQuery = params.get('search_query');
 
-      // Await storage retrieval as a Promise
-      const data = await getStorage(['allowedTopics']);
+      // Await storage retrieval
+      const data = await getStorage(['allowedTopics', 'filterLevel']);
       const allowedTopics = Array.isArray(data.allowedTopics) ? data.allowedTopics : [];
+      const filterLevel = data.filterLevel || 'strict';
 
-      const relevant = await isRelevantToTopics(searchQuery, allowedTopics);
+      if (allowedTopics.length === 0) {
+        // No topics set, skip filtering
+        return;
+      }
+
+      const relevant = await isRelevantToTopics(searchQuery, allowedTopics, filterLevel);
 
       if (!relevant) {
         await chrome.tabs.update(tabId, { url: chrome.runtime.getURL('reminder.html') });
