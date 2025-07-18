@@ -27,5 +27,8 @@ export async function callOpenAI(prompt) {
     return null;
   }
 
-  return await response.json();
+  const data = await response.json();
+  const content = data.choices?.[0]?.message?.content;
+  return typeof content === 'string' ? content.trim() : null;
+
 }
