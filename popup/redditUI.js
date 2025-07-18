@@ -191,4 +191,4 @@ function setupRedditHandlers() {
   updateLists();
 }
 
-export { setupRedditHandlers, updateLists };
+export { setupRedditHandlers };
