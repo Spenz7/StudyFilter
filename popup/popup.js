@@ -42,11 +42,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const whitelistList = document.getElementById("whitelist-list");
     const blacklistList = document.getElementById("blacklist-list");
 
-    // Whitelist with remove buttons
+    // Whitelist with remove buttons (show URLs as hyperlinks)
     whitelistList.innerHTML = "";
     whitelist.forEach(url => {
       const li = document.createElement("li");
-      li.textContent = url + " ";
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.textContent = url;
+      link.target = "_blank";  // Open in new tab
+      link.rel = "noopener noreferrer"; // Security best practice
+      link.style.marginRight = "8px";
+
       const btn = document.createElement("button");
       btn.textContent = "Remove";
       btn.style.marginLeft = "8px";
@@ -57,9 +64,12 @@ document.addEventListener("DOMContentLoaded", () => {
           updateLists();
         });
       };
+
+      li.appendChild(link);
       li.appendChild(btn);
       whitelistList.appendChild(li);
     });
+
 
     // Blacklist with remove buttons
     blacklistList.innerHTML = "";
