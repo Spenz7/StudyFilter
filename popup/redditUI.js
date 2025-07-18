@@ -5,7 +5,7 @@ function getCurrentUrl(callback) {
     if (tabs.length === 0) return callback(null);
     try {
       const url = tabs[0].url;
-      if (url.endsWith("reminder.html") || url.startsWith("chrome-extension://")) {
+      if (isReminderUrl(url)) {
         chrome.storage.local.get(["lastBlockedDomain"], (data) => {
           callback(data.lastBlockedDomain || null);
         });
@@ -18,6 +18,10 @@ function getCurrentUrl(callback) {
   });
 }
 
+function isReminderUrl(url) {
+  return url && (url.endsWith("reminder.html") || url.startsWith("chrome-extension://"));
+}
+
 function showStatus(msg, isError = false) {
   const status = document.getElementById("status");
   if (status) {
@@ -26,14 +30,11 @@ function showStatus(msg, isError = false) {
   }
 }
 
-function isReminderUrl(url) {
-  return url && (url.endsWith("reminder.html") || url.startsWith("chrome-extension://"));
-}
-
 function updateLists() {
   chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
     const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
     const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
+
     const whitelistList = document.getElementById("whitelist-list");
     const blacklistList = document.getElementById("blacklist-list");
 
@@ -68,7 +69,8 @@ function updateLists() {
     blacklistList.innerHTML = "";
     blacklist.forEach(url => {
       const li = document.createElement("li");
-      li.textContent = url + " ";
+
+      const textNode = document.createTextNode(url + " ");
       const btn = document.createElement("button");
       btn.textContent = "Remove";
       btn.onclick = () => {
@@ -78,6 +80,8 @@ function updateLists() {
           updateLists();
         });
       };
+
+      li.appendChild(textNode);
       li.appendChild(btn);
       blacklistList.appendChild(li);
     });
@@ -97,6 +101,7 @@ function setupRedditHandlers() {
         chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
           const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
           const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
+
           if (whitelist.includes(url)) {
             showStatus("Already in whitelist", true);
           } else if (blacklist.includes(url)) {
@@ -118,12 +123,12 @@ function setupRedditHandlers() {
       getCurrentUrl((url) => {
         if (!url || isReminderUrl(url)) return showStatus("Cannot remove reminder.html", true);
         chrome.storage.local.get(["whitelist"], (data) => {
-          let whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
+          const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
           if (!whitelist.includes(url)) {
             showStatus("Not in whitelist", true);
           } else {
-            whitelist = whitelist.filter(d => d !== url);
-            chrome.storage.local.set({ whitelist }, () => {
+            const newWhitelist = whitelist.filter(d => d !== url);
+            chrome.storage.local.set({ whitelist: newWhitelist }, () => {
               showStatus("Removed from whitelist");
               updateLists();
             });
@@ -140,6 +145,7 @@ function setupRedditHandlers() {
         chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
           const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
           const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
+
           if (whitelist.includes(url)) {
             showStatus("Cannot blacklist a whitelisted URL", true);
           } else if (blacklist.includes(url)) {
@@ -150,10 +156,10 @@ function setupRedditHandlers() {
               showStatus("Added to blacklist");
               updateLists();
 
+              // Redirect to reminder.html
               chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 if (tabs.length === 0) return;
-                const currentTabId = tabs[0].id;
-                chrome.tabs.update(currentTabId, { url: chrome.runtime.getURL('reminder.html') });
+                chrome.tabs.update(tabs[0].id, { url: chrome.runtime.getURL("reminder.html") });
               });
             });
           }
@@ -167,12 +173,12 @@ function setupRedditHandlers() {
       getCurrentUrl((url) => {
         if (!url || isReminderUrl(url)) return showStatus("Cannot remove reminder.html", true);
         chrome.storage.local.get(["blacklist"], (data) => {
-          let blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
+          const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
           if (!blacklist.includes(url)) {
             showStatus("Not in blacklist", true);
           } else {
-            blacklist = blacklist.filter(d => d !== url);
-            chrome.storage.local.set({ blacklist }, () => {
+            const newBlacklist = blacklist.filter(d => d !== url);
+            chrome.storage.local.set({ blacklist: newBlacklist }, () => {
               showStatus("Removed from blacklist");
               updateLists();
             });

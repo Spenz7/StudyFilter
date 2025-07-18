@@ -34,3 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+document.querySelectorAll('.dropdown-toggle').forEach(button => {
+  button.addEventListener('click', () => {
+    const targetId = button.getAttribute('data-target');
+    const list = document.getElementById(targetId);
+    list.classList.toggle('show');
+    button.textContent = button.textContent.includes('▼')
+      ? button.textContent.replace('▼', '▲')
+      : button.textContent.replace('▲', '▼');
+  });
+});

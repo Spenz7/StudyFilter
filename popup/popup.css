@@ -1,0 +1,73 @@
+body {
+  min-width: 300px;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-right: 10px;
+  margin-bottom: 4px;
+  padding: initial;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+#status {
+  margin-top: 6px;
+  min-height: 20px;
+}
+
+#topicStatus {
+  margin-top: 5px;
+  color: red;
+}
+
+ul {
+  padding-left: 20px;
+  margin-top: 4px;
+}
+
+.disclaimer {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+label {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+#redditButtons {
+  margin-bottom: 6px;
+}
+
+.dropdown {
+  margin-top: 8px;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  color: #007bff;
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+.collapsible-list {
+  list-style-type: disc;
+  margin-top: 4px;
+  display: none;
+}
+
+.collapsible-list.show {
+  display: block;
+}
