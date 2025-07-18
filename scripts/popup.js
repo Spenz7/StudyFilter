@@ -42,24 +42,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const whitelistList = document.getElementById("whitelist-list");
     const blacklistList = document.getElementById("blacklist-list");
 
-    // Whitelist with remove buttons
-    whitelistList.innerHTML = "";
-    whitelist.forEach(url => {
-      const li = document.createElement("li");
-      li.textContent = url + " ";
-      const btn = document.createElement("button");
-      btn.textContent = "Remove";
-      btn.style.marginLeft = "8px";
-      btn.onclick = () => {
-        const newWhitelist = whitelist.filter(d => d !== url);
-        chrome.storage.local.set({ whitelist: newWhitelist }, () => {
-          showStatus(`Removed ${url} from whitelist`);
-          updateLists();
-        });
-      };
-      li.appendChild(btn);
-      whitelistList.appendChild(li);
-    });
+    // Whitelist with remove buttons (show URLs as hyperlinks)
+  whitelistList.innerHTML = "";
+  whitelist.forEach(url => {
+    const li = document.createElement("li");
+  
+    const link = document.createElement("a");
+    link.href = url;
+    link.textContent = url;
+    link.target = "_blank";  // Open in new tab
+    link.rel = "noopener noreferrer"; // Security best practice
+    link.style.marginRight = "8px";
+  
+    const btn = document.createElement("button");
+    btn.textContent = "Remove";
+    btn.style.marginLeft = "8px";
+    btn.onclick = () => {
+      const newWhitelist = whitelist.filter(d => d !== url);
+      chrome.storage.local.set({ whitelist: newWhitelist }, () => {
+        showStatus(`Removed ${url} from whitelist`);
+        updateLists();
+      });
+    };
+  
+    li.appendChild(link);
+    li.appendChild(btn);
+    whitelistList.appendChild(li);
+  });
+
 
     // Blacklist with remove buttons
     blacklistList.innerHTML = "";
