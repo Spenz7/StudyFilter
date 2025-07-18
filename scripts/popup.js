@@ -139,11 +139,19 @@ document.addEventListener("DOMContentLoaded", () => {
           chrome.storage.local.set({ blacklist }, () => {
             showStatus("Added to blacklist");
             updateLists();
+  
+            // Immediately redirect current tab to reminder.html
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+              if (tabs.length === 0) return;
+              const currentTabId = tabs[0].id;
+              chrome.tabs.update(currentTabId, { url: chrome.runtime.getURL('reminder.html') });
+            });
           });
         }
       });
     });
   };
+
 
   removeBlacklistBtn.onclick = () => {
     getCurrentUrl((url) => {
