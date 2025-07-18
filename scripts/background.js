@@ -12,6 +12,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (domain.includes("reddit.com")) {
     handleReddit(tabId, tab.url);
   } else if (domain.includes("youtube.com")) {
+    // Note: handleYouTube is async but we don't await here because listener expects sync function
     handleYouTube(tabId, tab.url);
   }
 });
