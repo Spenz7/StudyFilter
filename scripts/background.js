@@ -1,5 +1,5 @@
-import { handleReddit } from './reddithandler.js';
-import { handleYouTube } from './youtubehandler.js';
+import { handleReddit } from './handlers/reddithandler.js';
+import { handleYouTube } from './handlers/youtubehandler.js';
 
 console.log("Background script loaded");
 

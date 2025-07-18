@@ -1,5 +1,5 @@
 // youtubehandler.js
-import { isRelevantToTopics } from './aicheck.js';
+import { isRelevantToTopics } from '../aicheck.js';
 
 function getStorage(keys) {
   return new Promise((resolve) => {
