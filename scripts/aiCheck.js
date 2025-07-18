@@ -1,5 +1,5 @@
 // scripts/aiCheck.js
-import { callAI } from './aiClient.js';
+import { callAI } from './providers/index.js';
 
 export async function isRelevantToTopics(phrase, allowedTopics) {
   const prompt = `Is the following phrase related to any of these topics? Answer with only "Yes" or "No".
