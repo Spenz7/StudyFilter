@@ -93,3 +93,20 @@ label {
 #filterLevelContainer p {
   margin: 0;
 }
+
+/* File input styling: hide default input, label looks like a button */
+input[type="file"] {
+  display: none;
+}
+
+label[for="upload-reminder-image"] {
+  margin-right: 10px;
+  margin-bottom: 4px;
+  padding: initial;
+  vertical-align: middle;
+  font-size: 14px;
+  background-color: buttonface;
+  border: 1px solid buttonborder;
+  padding: 2px 6px;
+  cursor: pointer;
+}

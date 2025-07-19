@@ -1,6 +1,6 @@
 <html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
@@ -8,9 +8,10 @@
     <button id="import-settings">Import Settings</button>
     <button id="export-settings">Export Settings</button>
 
-    <h3>Custom Reminder Image</h3>
+    <h3>Custom Reminder Image (rec 600x400 pixels)</h3>
+    <label for="upload-reminder-image">Choose File</label>
+    <span id="file-name">No file chosen</span>
     <input type="file" id="upload-reminder-image" accept="image/*" />
-    <div id="imageStatus"></div>
 
     <h3>Custom Reminder Messages</h3>
     <textarea id="reminder-textarea" rows="5" cols="40" placeholder="Enter up to 3 lines, separated by new lines"></textarea>
@@ -18,7 +19,6 @@
     <div id="textStatus"></div>
 
     <h3>Site Preferences</h3>
-
     <div id="redditButtons">
       <button id="add-whitelist">Add to Whitelist</button>
       <button id="remove-whitelist">Remove from Whitelist</button>
@@ -26,13 +26,11 @@
       <button id="remove-blacklist">Remove from Blacklist</button>
     </div>
 
-    <!-- Wrap whitelist and blacklist in flex container for side-by-side -->
     <div id="redditLists">
       <div class="dropdown">
         <button class="dropdown-toggle" data-target="whitelist-list">Whitelist ▼</button>
         <ul id="whitelist-list" class="collapsible-list"></ul>
       </div>
-
       <div class="dropdown">
         <button class="dropdown-toggle" data-target="blacklist-list">Blacklist ▼</button>
         <ul id="blacklist-list" class="collapsible-list"></ul>
@@ -40,7 +38,6 @@
     </div>
 
     <h3>YouTube Filtering Level</h3>
-    <!-- Wrap current mode + buttons side by side -->
     <div id="filterLevelContainer">
       <p><strong>Current Mode:</strong> <span id="current-filter-mode">Loading...</span></p>
       <button id="strictFilter">Strict</button>
@@ -48,12 +45,10 @@
     </div>
 
     <h3>YouTube Topic Preferences</h3>
-
     <label for="topicInput">Topic:</label>
     <input type="text" id="topicInput" placeholder="e.g. cooking" />
     <button id="submitTopic">Submit</button>
     <div id="topicStatus"></div>
-
     <ul id="allowedTopicsList"></ul>
 
     <script type="module" src="popup.js"></script>

@@ -130,3 +130,13 @@ chrome.storage.local.get(['reminderTextLines'], ({ reminderTextLines }) => {
     document.getElementById('reminder-textarea').value = reminderTextLines.join('\n');
   }
 });
+
+document.getElementById('upload-reminder-image').addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  const fileNameSpan = document.getElementById('file-name');
+  if (file) {
+    fileNameSpan.textContent = file.name;
+  } else {
+    fileNameSpan.textContent = 'No file chosen';
+  }
+});
