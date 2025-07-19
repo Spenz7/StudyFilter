@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       : [
           "1) Study now so you can study less later — you need to do it anyway.",
           "2) If you play now, you won't enjoy as much.",
-          "3) Exchange gpa MIN 4.6"
+          "3) Remember to smile :)"
         ];
 
     lines.forEach(line => {
