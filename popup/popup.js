@@ -1,27 +1,29 @@
 import { setupRedditHandlers } from "./redditUI.js";
 import { setupYouTubeHandlers } from "./youtubeUI.js";
 
-function initFilterLevelUI(filterLevel) {
-  const strictBtn = document.getElementById("strictFilter");
-  const lenientBtn = document.getElementById("lenientFilter");
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
-  if (filterLevel === 'strict') {
-    strictBtn.checked = true;
-  } else {
-    lenientBtn.checked = true;
+function initFilterLevelUI(filterLevel) {
+  const currentLabel = document.getElementById("current-filter-mode");
+  if (currentLabel) {
+    currentLabel.textContent = capitalize(filterLevel);
   }
 }
 
 function setupFilterLevelListeners() {
+  const currentLabel = document.getElementById("current-filter-mode");
+
   document.getElementById("strictFilter").addEventListener("click", () => {
     chrome.storage.local.set({ filterLevel: 'strict' }, () => {
-      alert("Filter set to strict.");
+      if (currentLabel) currentLabel.textContent = `Strict`;
     });
   });
 
   document.getElementById("lenientFilter").addEventListener("click", () => {
     chrome.storage.local.set({ filterLevel: 'lenient' }, () => {
-      alert("Filter set to lenient.");
+      if (currentLabel) currentLabel.textContent = `Lenient`;
     });
   });
 }
@@ -45,8 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupYouTubeHandlers();
 
   chrome.storage.local.get({ filterLevel: 'lenient' }, ({ filterLevel }) => {
-    // Make sure storage has the filterLevel key set
-    chrome.storage.local.set({ filterLevel });
+    chrome.storage.local.set({ filterLevel }); // Ensure key exists
     initFilterLevelUI(filterLevel);
   });
 
@@ -55,40 +56,39 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.getElementById('export-settings').addEventListener('click', async () => {
-    const data = await chrome.storage.local.get(['whitelist', 'blacklist', 'allowedTopics', 'filterLevel']);
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'studyfilter-settings.json';
-    a.click();
-    URL.revokeObjectURL(url);
+  const data = await chrome.storage.local.get(['whitelist', 'blacklist', 'allowedTopics', 'filterLevel']);
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'studyfilter-settings.json';
+  a.click();
+  URL.revokeObjectURL(url);
 });
 
 document.getElementById('import-settings').addEventListener('click', () => {
-    document.getElementById('import-file').click();
+  document.getElementById('import-file').click();
 });
 
 document.getElementById('import-file').addEventListener('change', async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+  const file = event.target.files[0];
+  if (!file) return;
 
-    const text = await file.text();
-    try {
-        const json = JSON.parse(text);
-        const { whitelist, blacklist, allowedTopics, filterLevel } = json;
+  const text = await file.text();
+  try {
+    const json = JSON.parse(text);
+    const { whitelist, blacklist, allowedTopics, filterLevel } = json;
 
-        // Optional: validate format here before writing
-        await chrome.storage.local.set({
-            ...(Array.isArray(whitelist) && { whitelist }),
-            ...(Array.isArray(blacklist) && { blacklist }),
-            ...(Array.isArray(allowedTopics) && { allowedTopics }),
-            ...(typeof filterLevel === 'string' && { filterLevel }),
-        });
+    await chrome.storage.local.set({
+      ...(Array.isArray(whitelist) && { whitelist }),
+      ...(Array.isArray(blacklist) && { blacklist }),
+      ...(Array.isArray(allowedTopics) && { allowedTopics }),
+      ...(typeof filterLevel === 'string' && { filterLevel }),
+    });
 
-        alert('Settings imported successfully.');
-        location.reload(); // Optional: Refresh to reflect changes immediately
-    } catch (e) {
-        alert('Invalid settings file.');
-    }
+    alert('Settings imported successfully.');
+    location.reload();
+  } catch (e) {
+    alert('Invalid settings file.');
+  }
 });
