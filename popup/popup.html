@@ -17,7 +17,6 @@
     <button id="save-reminder-text">Save Reminder Text</button>
     <div id="textStatus"></div>
 
-
     <h3>Site Preferences</h3>
 
     <div id="redditButtons">
@@ -27,25 +26,26 @@
       <button id="remove-blacklist">Remove from Blacklist</button>
     </div>
 
-    <div id="status"></div>
+    <!-- Wrap whitelist and blacklist in flex container for side-by-side -->
+    <div id="redditLists">
+      <div class="dropdown">
+        <button class="dropdown-toggle" data-target="whitelist-list">Whitelist ▼</button>
+        <ul id="whitelist-list" class="collapsible-list"></ul>
+      </div>
 
-    <div class="dropdown">
-      <button class="dropdown-toggle" data-target="whitelist-list">Whitelist ▼</button>
-      <ul id="whitelist-list" class="collapsible-list"></ul>
-    </div>
-
-    <div class="dropdown">
-      <button class="dropdown-toggle" data-target="blacklist-list">Blacklist ▼</button>
-      <ul id="blacklist-list" class="collapsible-list"></ul>
+      <div class="dropdown">
+        <button class="dropdown-toggle" data-target="blacklist-list">Blacklist ▼</button>
+        <ul id="blacklist-list" class="collapsible-list"></ul>
+      </div>
     </div>
 
     <h3>YouTube Filtering Level</h3>
-    <p><strong>Current Mode:</strong> <span id="current-filter-mode">Loading...</span></p>
-    <button id="strictFilter">Strict</button>
-    <button id="lenientFilter">Lenient</button>
-
-
-
+    <!-- Wrap current mode + buttons side by side -->
+    <div id="filterLevelContainer">
+      <p><strong>Current Mode:</strong> <span id="current-filter-mode">Loading...</span></p>
+      <button id="strictFilter">Strict</button>
+      <button id="lenientFilter">Lenient</button>
+    </div>
 
     <h3>YouTube Topic Preferences</h3>
 

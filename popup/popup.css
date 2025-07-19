@@ -47,6 +47,17 @@ label {
   margin-bottom: 6px;
 }
 
+/* New styles for side-by-side whitelist and blacklist */
+#redditLists {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+#redditLists > .dropdown {
+  flex: 1;
+}
+
 .dropdown {
   margin-top: 8px;
 }
@@ -70,4 +81,15 @@ label {
 
 .collapsible-list.show {
   display: block;
+}
+
+/* Flex container for current mode and buttons side by side */
+#filterLevelContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#filterLevelContainer p {
+  margin: 0;
 }
