@@ -140,7 +140,7 @@ function performRemove(type, url) {
   });
 }
 
-function setupRedditHandlers() {
+function setupSiteHandlers() {
   const addWhitelistBtn = document.getElementById("add-whitelist");
   const removeWhitelistBtn = document.getElementById("remove-whitelist");
   const addBlacklistBtn = document.getElementById("add-blacklist");

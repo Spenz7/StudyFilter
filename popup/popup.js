@@ -41,7 +41,7 @@ function setupDropdownToggles() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupRedditHandlers();
+  setupSiteHandlers();
   setupYouTubeHandlers();
 
   chrome.storage.local.get({ filterLevel: 'lenient' }, ({ filterLevel }) => {
