@@ -1,4 +1,6 @@
 // redditUI.js
+// This module works for general blacklisting of any site AND also 
+// as a Reddit subreddit filter (only view certain subreddits) where you whitelist subreddits and blacklist reddit.com.
 
 function getCurrentUrl(callback) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
