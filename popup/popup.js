@@ -1,4 +1,4 @@
-import { setupRedditHandlers } from "./redditUI.js";
+import { setupRedditHandlers } from "./siteUI.js";
 import { setupYouTubeHandlers } from "./youtubeUI.js";
 
 function initFilterLevelUI(filterLevel) {
