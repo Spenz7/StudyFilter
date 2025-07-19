@@ -53,3 +53,42 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFilterLevelListeners();
   setupDropdownToggles();
 });
+
+document.getElementById('export-settings').addEventListener('click', async () => {
+    const data = await chrome.storage.local.get(['whitelist', 'blacklist', 'allowedTopics', 'filterLevel']);
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'studyfilter-settings.json';
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+document.getElementById('import-settings').addEventListener('click', () => {
+    document.getElementById('import-file').click();
+});
+
+document.getElementById('import-file').addEventListener('change', async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const text = await file.text();
+    try {
+        const json = JSON.parse(text);
+        const { whitelist, blacklist, allowedTopics, filterLevel } = json;
+
+        // Optional: validate format here before writing
+        await chrome.storage.local.set({
+            ...(Array.isArray(whitelist) && { whitelist }),
+            ...(Array.isArray(blacklist) && { blacklist }),
+            ...(Array.isArray(allowedTopics) && { allowedTopics }),
+            ...(typeof filterLevel === 'string' && { filterLevel }),
+        });
+
+        alert('Settings imported successfully.');
+        location.reload(); // Optional: Refresh to reflect changes immediately
+    } catch (e) {
+        alert('Invalid settings file.');
+    }
+});
