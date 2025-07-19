@@ -4,9 +4,14 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <input type="file" id="import-file" accept=".json" style="display:none;" />
-    <button id="import-settings">Import Settings</button>
-    <button id="export-settings">Export Settings</button>
+    <div id="importExportDonate" style="margin-bottom: 12px;">
+      <input type="file" id="import-file" accept=".json" style="display:none;" />
+      <button id="import-settings">Import Settings</button>
+      <button id="export-settings">Export Settings</button>
+      <a href="https://coff.ee/spenz7" target="_blank" style="text-decoration: none;">
+        <button id="donate-button">Donate</button>
+      </a>
+    </div>
 
     <h3>Custom Reminder Image</h3>
     <label for="upload-reminder-image">Choose File</label>
