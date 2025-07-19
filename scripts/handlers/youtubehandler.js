@@ -1,4 +1,4 @@
-// youtubehandler.js
+// scripts/handlers/youtubehandler.js
 import { isRelevantToTopics } from '../aicheck.js';
 
 function getStorage(keys) {
