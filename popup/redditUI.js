@@ -53,13 +53,7 @@ function updateLists() {
 
       const btn = document.createElement("button");
       btn.textContent = "Remove";
-      btn.onclick = () => {
-        const newWhitelist = whitelist.filter(d => d !== url);
-        chrome.storage.local.set({ whitelist: newWhitelist }, () => {
-          showStatus(`Removed ${url} from whitelist`);
-          updateLists();
-        });
-      };
+      btn.onclick = () => removeFromList('whitelist', url);
 
       li.appendChild(link);
       li.appendChild(btn);
@@ -73,18 +67,74 @@ function updateLists() {
       const textNode = document.createTextNode(url + " ");
       const btn = document.createElement("button");
       btn.textContent = "Remove";
-      btn.onclick = () => {
-        const newBlacklist = blacklist.filter(d => d !== url);
-        chrome.storage.local.set({ blacklist: newBlacklist }, () => {
-          showStatus(`Removed ${url} from blacklist`);
-          updateLists();
-        });
-      };
+      btn.onclick = () => removeFromList('blacklist', url);
 
       li.appendChild(textNode);
       li.appendChild(btn);
       blacklistList.appendChild(li);
     });
+  });
+}
+
+function addToList(type) {
+  getCurrentUrl((url) => {
+    if (!url || isReminderUrl(url)) return showStatus("Cannot add reminder.html", true);
+
+    chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
+      const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
+      const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
+
+      const list = type === 'whitelist' ? whitelist : blacklist;
+      const otherList = type === 'whitelist' ? blacklist : whitelist;
+
+      if (list.includes(url)) {
+        showStatus(`Already in ${type}`, true);
+      } else if (otherList.includes(url)) {
+        showStatus(`Remove from ${type === 'whitelist' ? 'blacklist' : 'whitelist'} first`, true);
+      } else {
+        list.push(url);
+        chrome.storage.local.set({ [type]: list }, () => {
+          showStatus(`Added to ${type}`);
+          updateLists();
+
+          if (type === 'blacklist') {
+            // Redirect to reminder.html after adding to blacklist
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+              if (tabs.length === 0) return;
+              chrome.tabs.update(tabs[0].id, { url: chrome.runtime.getURL("reminder.html") });
+            });
+          }
+        });
+      }
+    });
+  });
+}
+
+function removeFromList(type, urlToRemove = null) {
+  if (urlToRemove) {
+    // Remove specific URL passed as argument (used for list remove buttons)
+    performRemove(type, urlToRemove);
+  } else {
+    // Remove current tab URL (used for remove button linked to current tab)
+    getCurrentUrl((url) => {
+      if (!url || isReminderUrl(url)) return showStatus("Cannot remove reminder.html", true);
+      performRemove(type, url);
+    });
+  }
+}
+
+function performRemove(type, url) {
+  chrome.storage.local.get([type], (data) => {
+    const list = Array.isArray(data[type]) ? data[type] : [];
+    if (!list.includes(url)) {
+      showStatus(`Not in ${type}`, true);
+    } else {
+      const newList = list.filter(d => d !== url);
+      chrome.storage.local.set({ [type]: newList }, () => {
+        showStatus(`Removed from ${type}`);
+        updateLists();
+      });
+    }
   });
 }
 
@@ -94,99 +144,10 @@ function setupRedditHandlers() {
   const addBlacklistBtn = document.getElementById("add-blacklist");
   const removeBlacklistBtn = document.getElementById("remove-blacklist");
 
-  if (addWhitelistBtn) {
-    addWhitelistBtn.onclick = () => {
-      getCurrentUrl((url) => {
-        if (!url || isReminderUrl(url)) return showStatus("Cannot add reminder.html", true);
-        chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
-          const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
-          const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
-
-          if (whitelist.includes(url)) {
-            showStatus("Already in whitelist", true);
-          } else if (blacklist.includes(url)) {
-            showStatus("Remove from blacklist first", true);
-          } else {
-            whitelist.push(url);
-            chrome.storage.local.set({ whitelist }, () => {
-              showStatus("Added to whitelist");
-              updateLists();
-            });
-          }
-        });
-      });
-    };
-  }
-
-  if (removeWhitelistBtn) {
-    removeWhitelistBtn.onclick = () => {
-      getCurrentUrl((url) => {
-        if (!url || isReminderUrl(url)) return showStatus("Cannot remove reminder.html", true);
-        chrome.storage.local.get(["whitelist"], (data) => {
-          const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
-          if (!whitelist.includes(url)) {
-            showStatus("Not in whitelist", true);
-          } else {
-            const newWhitelist = whitelist.filter(d => d !== url);
-            chrome.storage.local.set({ whitelist: newWhitelist }, () => {
-              showStatus("Removed from whitelist");
-              updateLists();
-            });
-          }
-        });
-      });
-    };
-  }
-
-  if (addBlacklistBtn) {
-    addBlacklistBtn.onclick = () => {
-      getCurrentUrl((url) => {
-        if (!url || isReminderUrl(url)) return showStatus("Cannot add reminder.html", true);
-        chrome.storage.local.get(["whitelist", "blacklist"], (data) => {
-          const whitelist = Array.isArray(data.whitelist) ? data.whitelist : [];
-          const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
-
-          if (whitelist.includes(url)) {
-            showStatus("Cannot blacklist a whitelisted URL", true);
-          } else if (blacklist.includes(url)) {
-            showStatus("Already in blacklist", true);
-          } else {
-            blacklist.push(url);
-            chrome.storage.local.set({ blacklist }, () => {
-              showStatus("Added to blacklist");
-              updateLists();
-
-              // Redirect to reminder.html
-              chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                if (tabs.length === 0) return;
-                chrome.tabs.update(tabs[0].id, { url: chrome.runtime.getURL("reminder.html") });
-              });
-            });
-          }
-        });
-      });
-    };
-  }
-
-  if (removeBlacklistBtn) {
-    removeBlacklistBtn.onclick = () => {
-      getCurrentUrl((url) => {
-        if (!url || isReminderUrl(url)) return showStatus("Cannot remove reminder.html", true);
-        chrome.storage.local.get(["blacklist"], (data) => {
-          const blacklist = Array.isArray(data.blacklist) ? data.blacklist : [];
-          if (!blacklist.includes(url)) {
-            showStatus("Not in blacklist", true);
-          } else {
-            const newBlacklist = blacklist.filter(d => d !== url);
-            chrome.storage.local.set({ blacklist: newBlacklist }, () => {
-              showStatus("Removed from blacklist");
-              updateLists();
-            });
-          }
-        });
-      });
-    };
-  }
+  if (addWhitelistBtn) addWhitelistBtn.onclick = () => addToList('whitelist');
+  if (removeWhitelistBtn) removeWhitelistBtn.onclick = () => removeFromList('whitelist');
+  if (addBlacklistBtn) addBlacklistBtn.onclick = () => addToList('blacklist');
+  if (removeBlacklistBtn) removeBlacklistBtn.onclick = () => removeFromList('blacklist');
 
   updateLists();
 }

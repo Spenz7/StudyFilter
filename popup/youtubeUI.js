@@ -1,35 +1,40 @@
-// youtubeUI.js
+function createTopicListItem(topic, allowedTopics, updateCallback) {
+  const li = document.createElement("li");
+
+  const span = document.createElement("span");
+  span.textContent = topic;
+
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "Remove";
+  removeBtn.style.marginLeft = "8px";
+  removeBtn.onclick = () => {
+    const updated = allowedTopics.filter(t => t !== topic);
+    chrome.storage.local.set({ allowedTopics: updated }, updateCallback);
+  };
+
+  li.appendChild(span);
+  li.appendChild(removeBtn);
+
+  return li;
+}
 
 function updateAllowedTopicsList() {
   chrome.storage.local.get(["allowedTopics"], (data) => {
     const list = document.getElementById("allowedTopicsList");
     if (!list) return;
+
     list.innerHTML = "";
 
     const allowedTopics = Array.isArray(data.allowedTopics) ? data.allowedTopics : [];
 
-    allowedTopics.forEach((topic) => {
-      const li = document.createElement("li");
-
-      const span = document.createElement("span");
-      span.textContent = topic;
-
-      const removeBtn = document.createElement("button");
-      removeBtn.textContent = "Remove";
-      removeBtn.style.marginLeft = "8px";
-      removeBtn.onclick = () => {
-        const updated = allowedTopics.filter(t => t !== topic);
-        chrome.storage.local.set({ allowedTopics: updated }, updateAllowedTopicsList);
-      };
-
-      li.appendChild(span);
-      li.appendChild(removeBtn);
+    allowedTopics.forEach(topic => {
+      const li = createTopicListItem(topic, allowedTopics, updateAllowedTopicsList);
       list.appendChild(li);
     });
   });
 }
 
-function setupYouTubeHandlers() {
+function setupTopicInputHandlers() {
   const submitBtn = document.getElementById("submitTopic");
   const topicInput = document.getElementById("topicInput");
   const status = document.getElementById("topicStatus");
@@ -59,7 +64,10 @@ function setupYouTubeHandlers() {
       });
     });
   };
+}
 
+function setupYouTubeHandlers() {
+  setupTopicInputHandlers();
   updateAllowedTopicsList();
 }
 
