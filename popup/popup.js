@@ -92,3 +92,41 @@ document.getElementById('import-file').addEventListener('change', async (event) 
     alert('Invalid settings file.');
   }
 });
+
+// Helper: save image as base64 string in storage
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('upload-reminder-image').addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  try {
+    const dataUrl = await readFileAsDataURL(file);
+    await chrome.storage.local.set({ reminderImage: dataUrl });
+    document.getElementById('imageStatus').textContent = "Image uploaded successfully.";
+  } catch (error) {
+    console.error("Failed to upload image", error);
+    document.getElementById('imageStatus').textContent = "Failed to upload image.";
+  }
+});
+
+document.getElementById('save-reminder-text').addEventListener('click', async () => {
+  const textarea = document.getElementById('reminder-textarea');
+  const lines = textarea.value.split('\n').slice(0, 3);  // max 3 lines
+  await chrome.storage.local.set({ reminderTextLines: lines });
+  document.getElementById('textStatus').textContent = "Reminder text saved.";
+});
+
+// On popup load, prefill textarea with saved text if any
+chrome.storage.local.get(['reminderTextLines'], ({ reminderTextLines }) => {
+  if (Array.isArray(reminderTextLines)) {
+    document.getElementById('reminder-textarea').value = reminderTextLines.join('\n');
+  }
+});
