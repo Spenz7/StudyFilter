@@ -1,4 +1,5 @@
 // scripts/handlers/reddithandler.js
+// handle general site blocking + Reddit logic.
 import { PlatformHandler } from './platformhandler.js';
 
 const redditHandler = new PlatformHandler('Reddit');
