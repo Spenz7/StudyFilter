@@ -53,10 +53,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setupFilterLevelListeners();
   setupDropdownToggles();
+
+  // Prefill reminder text
+  chrome.storage.local.get(['reminderTextLines'], ({ reminderTextLines }) => {
+    if (Array.isArray(reminderTextLines)) {
+      const textarea = document.getElementById('reminder-textarea');
+      if (textarea) {
+        textarea.value = reminderTextLines.join('\n');
+      }
+    }
+  });
 });
 
+// Export settings (with image and reminder text)
 document.getElementById('export-settings').addEventListener('click', async () => {
-  const data = await chrome.storage.local.get(['whitelist', 'blacklist', 'allowedTopics', 'filterLevel']);
+  const data = await chrome.storage.local.get([
+    'whitelist',
+    'blacklist',
+    'allowedTopics',
+    'filterLevel',
+    'reminderImage',
+    'reminderTextLines'
+  ]);
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -66,6 +84,7 @@ document.getElementById('export-settings').addEventListener('click', async () =>
   URL.revokeObjectURL(url);
 });
 
+// Import settings (with image and reminder text)
 document.getElementById('import-settings').addEventListener('click', () => {
   document.getElementById('import-file').click();
 });
@@ -74,16 +93,25 @@ document.getElementById('import-file').addEventListener('change', async (event) 
   const file = event.target.files[0];
   if (!file) return;
 
-  const text = await file.text();
   try {
+    const text = await file.text();
     const json = JSON.parse(text);
-    const { whitelist, blacklist, allowedTopics, filterLevel } = json;
+    const {
+      whitelist,
+      blacklist,
+      allowedTopics,
+      filterLevel,
+      reminderImage,
+      reminderTextLines
+    } = json;
 
     await chrome.storage.local.set({
       ...(Array.isArray(whitelist) && { whitelist }),
       ...(Array.isArray(blacklist) && { blacklist }),
       ...(Array.isArray(allowedTopics) && { allowedTopics }),
       ...(typeof filterLevel === 'string' && { filterLevel }),
+      ...(typeof reminderImage === 'string' && { reminderImage }),
+      ...(Array.isArray(reminderTextLines) && { reminderTextLines })
     });
 
     alert('Settings imported successfully.');
@@ -93,7 +121,7 @@ document.getElementById('import-file').addEventListener('change', async (event) 
   }
 });
 
-// Helper: save image as base64 string in storage
+// Helper: convert file to base64
 function readFileAsDataURL(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -103,40 +131,32 @@ function readFileAsDataURL(file) {
   });
 }
 
+// Unified handler for image upload
 document.getElementById('upload-reminder-image').addEventListener('change', async (event) => {
   const file = event.target.files[0];
-  if (!file) return;
-
-  try {
-    const dataUrl = await readFileAsDataURL(file);
-    await chrome.storage.local.set({ reminderImage: dataUrl });
-    document.getElementById('imageStatus').textContent = "Image uploaded successfully.";
-  } catch (error) {
-    console.error("Failed to upload image", error);
-    document.getElementById('imageStatus').textContent = "Failed to upload image.";
-  }
-});
-
-document.getElementById('save-reminder-text').addEventListener('click', async () => {
-  const textarea = document.getElementById('reminder-textarea');
-  const lines = textarea.value.split('\n').slice(0, 3);  // max 3 lines
-  await chrome.storage.local.set({ reminderTextLines: lines });
-  document.getElementById('textStatus').textContent = "Reminder text saved.";
-});
-
-// On popup load, prefill textarea with saved text if any
-chrome.storage.local.get(['reminderTextLines'], ({ reminderTextLines }) => {
-  if (Array.isArray(reminderTextLines)) {
-    document.getElementById('reminder-textarea').value = reminderTextLines.join('\n');
-  }
-});
-
-document.getElementById('upload-reminder-image').addEventListener('change', (event) => {
-  const file = event.target.files[0];
   const fileNameSpan = document.getElementById('file-name');
+  const imageStatus = document.getElementById('imageStatus');
+
   if (file) {
     fileNameSpan.textContent = file.name;
+    try {
+      const dataUrl = await readFileAsDataURL(file);
+      await chrome.storage.local.set({ reminderImage: dataUrl });
+      if (imageStatus) imageStatus.textContent = "Image uploaded successfully.";
+    } catch (error) {
+      console.error("Failed to upload image", error);
+      if (imageStatus) imageStatus.textContent = "Failed to upload image.";
+    }
   } else {
     fileNameSpan.textContent = 'No file chosen';
   }
+});
+
+// Save reminder text
+document.getElementById('save-reminder-text').addEventListener('click', async () => {
+  const textarea = document.getElementById('reminder-textarea');
+  const status = document.getElementById('textStatus');
+  const lines = textarea.value.split('\n').slice(0, 3);
+  await chrome.storage.local.set({ reminderTextLines: lines });
+  if (status) status.textContent = "Reminder text saved.";
 });
