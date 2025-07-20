@@ -1,35 +1,68 @@
-//scripts/providers/openRouter.js
-import { OPENROUTER_API_KEY } from '../config.js';
+// scripts/providers/openrouter.js
 
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+/**
+ * Sanitizes input before sending to the Worker.
+ * - Removes emojis
+ * - Allows full stops (.)
+ * - Strips other symbols
+ * - Deduplicates and truncates topics
+ */
+function sanitizeInput(phrase, topics) {
+  const cleanPhrase = phrase
+    .slice(0, 35)
+    .replace(/\p{Emoji}/gu, '')          // Remove emojis
+    .replace(/[^\w\s.]/gi, '')           // Allow full stops
+    .toLowerCase()
+    .trim();
 
-export async function callOpenRouter(prompt) {
-  if (!OPENROUTER_API_KEY) {
-    console.error("OpenRouter API key is missing");
-    return null;
+  const cleanTopics = [...new Set(topics)]
+    .slice(0, 10)
+    .map(t => t.slice(0, 20).toLowerCase());
+
+  return { cleanPhrase, cleanTopics };
+}
+
+export async function callOpenRouter(phrase, topics, mode) {
+  if (
+    typeof phrase !== 'string' || 
+    phrase.length === 0 ||
+    !Array.isArray(topics) ||
+    topics.length > 10 ||
+    !['strict', 'lenient'].includes(mode)
+  ) {
+    console.warn('Invalid input – defaulting to allow');
+    return 'yes';
   }
 
-  const response = await fetch(OPENROUTER_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 5,
-      temperature: 0,
-    }),
-  });
+  const { cleanPhrase, cleanTopics } = sanitizeInput(phrase, topics);
 
-  if (!response.ok) {
-    console.error("OpenRouter API error:", response.statusText);
-    return null;
+  try {
+    console.log('Sending request with Origin:', `chrome-extension://${chrome.runtime.id}`);
+
+    const response = await fetch('https://youtube-filter-worker-development.spenz.workers.dev', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Client-Version': chrome.runtime.getManifest().version
+      },
+      body: JSON.stringify({
+        phrase: cleanPhrase,
+        topics: cleanTopics,
+        mode,
+        provider: 'openrouter'  // Important: tell the worker which backend to use
+      })
+    });
+
+    if (!response.ok) {
+      console.error(`Worker error (${response.status}) – defaulting to allow`);
+      return 'yes';
+    }
+
+    const result = await response.text();
+    return result.trim().toLowerCase() === 'no' ? 'no' : 'yes';
+
+  } catch (err) {
+    console.error('OpenRouter check failed:', err);
+    return 'yes'; // allow utube search to pass if ai check got error
   }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content;
-  return typeof content === 'string' ? content.trim() : null;
-
 }

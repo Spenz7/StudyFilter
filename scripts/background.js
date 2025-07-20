@@ -7,9 +7,10 @@ console.log('[Background] Service worker loaded');
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status !== 'complete' || !tab.url) return;
 
-  try {
-    if (tab.url.startsWith('chrome-extension://')) return;
+  // Skip non-web protocols (e.g., chrome://, file://, about:, etc.)
+  if (!tab.url.startsWith('http')) return;
 
+  try {
     const url = new URL(tab.url);
     const domain = url.hostname.replace(/^www\./, '').toLowerCase();
 
@@ -22,3 +23,4 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.error('[Background] Error parsing tab URL:', tab.url, e);
   }
 });
+

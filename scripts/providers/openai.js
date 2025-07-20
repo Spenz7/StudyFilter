@@ -1,35 +1,69 @@
-//scripts/providers/openai.js
-import { OPENAI_API_KEY } from '../config.js';
+// scripts/providers/openai.js
 
-const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
+/**
+ * Sanitizes input before sending to the Worker.
+ * - Removes emojis
+ * - Allows full stops (.)
+ * - Strips other symbols
+ * - Deduplicates and truncates topics
+ */
+function sanitizeInput(phrase, topics) {
+  const cleanPhrase = phrase
+    .slice(0, 35)
+    .replace(/\p{Emoji}/gu, '')          // Remove emojis
+    .replace(/[^\w\s.]/gi, '')           // Allow full stops
+    .toLowerCase()
+    .trim();
 
-export async function callOpenAI(prompt) {
-  if (!OPENAI_API_KEY) {
-    console.error("OpenAI API key is missing");
-    return null;
+  const cleanTopics = [...new Set(topics)]
+    .slice(0, 10)
+    .map(t => t.slice(0, 20).toLowerCase());
+
+  return { cleanPhrase, cleanTopics };
+}
+
+export async function callOpenAI(phrase, topics, mode, provider = 'openai') {
+  if (
+    typeof phrase !== 'string' || 
+    phrase.length === 0 ||
+    !Array.isArray(topics) ||
+    topics.length > 10 ||
+    !['strict', 'lenient'].includes(mode)
+  ) {
+    console.warn('Invalid input – defaulting to allow');
+    return 'yes';
   }
 
-  const response = await fetch(OPENAI_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 5,
-      temperature: 0,
-    }),
-  });
+  const { cleanPhrase, cleanTopics } = sanitizeInput(phrase, topics);
 
-  if (!response.ok) {
-    console.error("OpenAI API error:", response.statusText);
-    return null;
+  try {
+    // Log the Origin header you expect to send
+    console.log('Sending request with Origin:', `chrome-extension://${chrome.runtime.id}`);
+    
+    const response = await fetch('https://youtube-filter-worker-development.spenz.workers.dev', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Client-Version': chrome.runtime.getManifest().version
+      },
+      body: JSON.stringify({
+        phrase: cleanPhrase,
+        topics: cleanTopics,
+        mode,
+        provider
+      })
+    });
+
+    if (!response.ok) {
+      console.error(`Worker error (${response.status}) – defaulting to allow`);
+      return 'yes';
+    }
+
+    const result = await response.text();
+    return result.trim().toLowerCase() === 'no' ? 'no' : 'yes';
+
+  } catch (err) {
+    console.error('AI check failed:', err);
+    return 'yes'; // allow utube search to pass if ai check got error
   }
-
-  const data = await response.json();
-  const content = data.choices?.[0]?.message?.content;
-  return typeof content === 'string' ? content.trim() : null;
-
 }

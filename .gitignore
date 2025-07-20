@@ -1,1 +1,11 @@
-config.js
+# Prevent secrets from being committed
+.env
+*.local
+*.key
+*.pem
+
+# Ignore build output if any
+dist/
+build/
+.cache/
+
