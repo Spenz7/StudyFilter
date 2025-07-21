@@ -55,7 +55,7 @@ export async function handleYouTube(tabId, url) {
 
     // Validate topics before sending to AI
     if (!validateTopics(allowedTopics) || allowedTopics.length === 0) {
-      console.warn('Invalid topics configuration - skipping check');
+      console.warn('Invalid topics configuration - skipping check', allowedTopics);
       return;
     }
 

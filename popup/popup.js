@@ -43,6 +43,14 @@ function setupDropdownToggles() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  // Ensure allowedTopics is always an array in storage
+  chrome.storage.local.get(['allowedTopics'], (data) => {
+    if (!Array.isArray(data.allowedTopics)) {
+      chrome.storage.local.set({ allowedTopics: [] });
+    }
+  });
+
   setupRedditHandlers();
   setupYouTubeHandlers();
 
