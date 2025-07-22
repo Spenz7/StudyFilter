@@ -1,4 +1,5 @@
 // redditUI.js
+// contains logic for whitelist and blacklist (even for general blacklisting)
 // This module works for general blacklisting of any site AND also 
 // as a Reddit subreddit filter (only view certain subreddits) where you whitelist subreddits and blacklist reddit.com.
 
