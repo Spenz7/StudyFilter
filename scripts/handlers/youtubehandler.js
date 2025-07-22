@@ -13,7 +13,7 @@ function sanitizeQuery(query) {
   return query
     .slice(0, 35)                          // Truncate to max length
     .replace(/\p{Emoji}/gu, '')            // Remove all emojis
-    .replace(/[^\w\s\-\+#\$%&*\.\.]/gi, '')// Allow . along with - + # $ % & *
+    .replace(/[^\w\s\-\+#\$%&*\.\/\?\!',]/gi, '') // Allow certain special char, refer to docs
     .replace(/\s+/g, ' ')                  // Collapse multiple spaces
     .toLowerCase()                         // Lowercase
     .trim();                               // Trim ends
