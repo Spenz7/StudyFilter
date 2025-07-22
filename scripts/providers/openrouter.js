@@ -1,5 +1,7 @@
 // scripts/providers/openrouter.js
 
+import { getWorkerUrl } from './getworkerurl.js';
+
 /**
  * Sanitizes input before sending to the Worker.
  * - Removes emojis
@@ -35,11 +37,12 @@ export async function callOpenRouter(phrase, topics, mode) {
   }
 
   const { cleanPhrase, cleanTopics } = sanitizeInput(phrase, topics);
-
+  
   try {
-    console.log('Sending request with Origin:', `chrome-extension://${chrome.runtime.id}`);
+    const workerUrl = getWorkerUrl();
+    console.log(`Using worker URL: ${workerUrl}`);
 
-    const response = await fetch('https://youtube-filter-worker-development.spenz.workers.dev', {
+    const response = await fetch(workerUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
