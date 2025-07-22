@@ -22,7 +22,7 @@ export async function isRelevantToTopics(phrase, allowedTopics, filterLevel) {
     : '';
 
   const cleanTopics = Array.isArray(allowedTopics)
-    ? [...new Set(allowedTopics)].slice(0, SECURITY.MAX_TOPICS)
+    ? [...new Set(allowedTopics)].slice(0, SECURITY.MAX_TOPICS).sort()
     : [];
 
   if (!cleanPhrase || cleanTopics.length === 0) {

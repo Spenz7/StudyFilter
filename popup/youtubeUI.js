@@ -1,4 +1,3 @@
-// popup/youtubeUI.js
 function createTopicListItem(topic, allowedTopics, updateCallback) {
   const li = document.createElement("li");
 
@@ -49,11 +48,21 @@ function setupTopicInputHandlers() {
       return;
     }
 
+    if (topic.length > 20) {
+      status.textContent = "Topic must be 20 characters or less.";
+      return;
+    }
+
     chrome.storage.local.get(["allowedTopics"], (data) => {
       const allowedTopics = Array.isArray(data.allowedTopics) ? data.allowedTopics : [];
 
       if (allowedTopics.includes(topic)) {
         status.textContent = "Topic already exists.";
+        return;
+      }
+
+      if (allowedTopics.length >= 10) {
+        status.textContent = "You can only add up to 10 topics.";
         return;
       }
 
