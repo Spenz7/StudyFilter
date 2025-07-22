@@ -1,6 +1,19 @@
 import { setupRedditHandlers } from "./redditUI.js";
 import { setupYouTubeHandlers } from "./youtubeUI.js";
 
+function showStatus(msg, isError = false) {
+  const status = document.getElementById("status");
+  if (status) {
+    status.textContent = msg;
+    status.style.color = isError ? "red" : "green";
+
+    clearTimeout(showStatus._timeout);
+    showStatus._timeout = setTimeout(() => {
+      status.textContent = "";
+    }, 3000);
+  }
+}
+
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }

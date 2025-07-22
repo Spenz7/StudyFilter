@@ -1,7 +1,8 @@
-<!--popup.html--> 
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
+    <title>Focus Extension</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
@@ -17,7 +18,7 @@
     <h3>Custom Reminder Image</h3>
     <label for="upload-reminder-image">Choose File</label>
     <span id="file-name">No file chosen</span>
-    <input type="file" id="upload-reminder-image" accept="image/*" style="display:none;" />
+    <input type="file" id="upload-reminder-image" accept="image/*" />
     <span id="imageStatus"></span>
 
     <h3>Custom Reminder Messages</h3>
@@ -25,14 +26,18 @@
     <button id="save-reminder-text">Save Reminder Text</button>
     <div id="textStatus"></div>
 
-    <h3>Site Preferences</h3>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <p style="margin: 0; font-size: 14px; font-weight: bold;">Site Preferences</p>
+      <p id="status" style="margin: 0; font-size: 12px;"></p>
+    </div>
+
     <div id="redditButtons">
       <button id="add-whitelist">Add to Whitelist</button>
       <button id="remove-whitelist">Remove from Whitelist</button>
       <button id="add-blacklist">Add to Blacklist</button>
       <button id="remove-blacklist">Remove from Blacklist</button>
     </div>
-
+    
     <div id="redditLists">
       <div class="dropdown">
         <button class="dropdown-toggle" data-target="whitelist-list">Whitelist ▼</button>
