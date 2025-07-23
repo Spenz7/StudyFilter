@@ -23,7 +23,8 @@ Tutorial link:
     A simple blacklist blocks distracting websites outside of Reddit and YouTube.
 
 -   **Customizable Reminder Page:**\
-    You can customize your reminder page by editing the HTML/CSS.\
+    You can use the upload file button to upload images/GIFs and the textbox to enter your custom text \
+    Or you can download this as an unpacked extension and customize your reminder page by editing the HTML/CSS.\
     Important: Keep the following elements intact so custom images and texts load correctly:
 
     -   The image tag with `id="reminder-image"`
