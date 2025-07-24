@@ -6,7 +6,7 @@ Tutorial link:
 
 -   **v2:** v1 + General website blocking + Reddit filtering
 
--   **v3:** v2 + YouTube filtering (personal use using your own OPENAI/OPENROUTER API key)
+-   **UNDER MAINTENANCE v3:** v2 + YouTube filtering (personal use using your own OPENAI/OPENROUTER API key) 
 
 -   **v4:** v2 + YouTube filtering (public use)
 
