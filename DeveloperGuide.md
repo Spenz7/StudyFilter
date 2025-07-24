@@ -1,69 +1,187 @@
-# Developer Guide
+**GETTING STARTED**
 
-**Guide I used to learn from:**  
-https://developer.chrome.com/docs/extensions/get-started
+-   Guide used: <https://developer.chrome.com/docs/extensions/get-started>
 
-## Workflow
+-   Basic workflow:
 
-GitHub repo ←→ Cloned folder on your PC ←→ Chrome extension (unpacked)
+    -   GitHub repo ↔ Cloned local folder ↔ Chrome (unpacked extension)
 
-## Methods I Use to Implement New Changes
+**Development Flow**
 
-- Edit cloned folder → Reload Chrome Extension & push changes onto GitHub repo (to avoid conflicts)  
-- Edit GitHub repo → Pull changes to cloned folder → Reload Chrome Extension
+1.  Make edits in local folder → Reload extension in Chrome → Push to GitHub.
 
-## Term Meaning
+2.  If editing directly on GitHub, remember to pull before testing locally.
 
-- **Popup:** The small UI window that shows when you click your extension’s icon.  
-- **popup.html:** The HTML page that renders inside this popup.  
-- **popup.js:** The JavaScript file that runs inside the popup page. Currently not used but may be needed in the future.  
-- **Background script:** Runs independently in the background, not visible to the user.
+* * * * *
 
-## Permissions Needed
+**MANIFEST PERMISSIONS**
 
-For full details, see: https://developer.chrome.com/docs/extensions/develop/concepts/declare-permissions
+Main categories in `manifest.json`:
 
-> Note: All permissions required will, by default, be warned to the user upon installation.
+-   `"permissions"` → e.g. tabs, scripting, storage
 
-### Extension Permissions Breakdown
+-   `"host_permissions"` → domains like `youtube.com`, `reddit.com`
 
-There are two main types of permissions in `manifest.json`:
+Common permissions:
 
-- `"permissions"` → access to Chrome APIs (tabs, storage, scripting, etc.)  
-- `"host_permissions"` → access to websites (e.g., youtube.com, reddit.com)
+-   `tabs` → Read tab info (title, URL, ID).
 
-#### Common Permissions Explained
+-   `storage` → Save user settings like whitelist, blacklist, etc.
 
-- `"tabs"`  
-  Grants access to the tab object, allowing you to:  
-  - See which tabs are open  
-  - Access their URLs  
-  - Get tab titles  
-  - Get tab IDs  
+-   `scripting` → Inject JS into pages.
 
-  > Note: You still need `"host_permissions"` to reliably access full URLs on some sites (e.g., https sites) due to security restrictions.
+-   `host_permissions` → Allow matching specific websites.
 
-- `"storage"`  
-  Allows use of `chrome.storage.local` to:  
-  - Store the whitelist/blacklist  
-  - Save user settings  
-  
-  > Alternative: `localStorage` (currently not in use).
+* * * * *
 
-- `"scripting"`  
-  Grants permission to inject JavaScript into web pages. Useful for:  
-  - Changing appearance (e.g., darkening the page)  
-  - Adding banners or overlays  
-  
-  > Note: Loading a static page like `reminder.html` does **not** require the `"scripting"` permission.
+**REDDIT URL FILTERING**
 
-- `"host_permissions"`  
-  Grants permission to match and interact with specific websites based on their URL.  
-  
-  "Match" means:  
-  - “Does the tab’s URL fit one of the patterns I’m allowed to work on?”  
-  
-  Patterns are defined with `"host_permissions"` in `manifest.json`. For example:
+Logic:
 
-  ```json
-  "host_permissions": ["<all_urls>"]
+-   If tab URL matches an entry in `chrome.storage.local.whitelist`, allow.
+
+-   Else, if it matches an entry in `blacklist`, redirect to `reminder.html`.
+
+-   If in neither list, allow access.
+
+Example:
+
+-   Whitelist: `https://www.reddit.com/r/NTU/`
+
+-   Blacklist: `https://www.reddit.com`
+
+-   Result:
+
+    -   `https://www.reddit.com/r/NTU/comments/...` → allowed
+
+    -   `https://www.reddit.com/popular/` → blocked
+
+* * * * *
+
+**POPUP MENU FUNCTIONS**
+
+Whitelist / Blacklist Management:
+
+-   Add:
+
+    -   Reject duplicates or cross-conflicts.
+
+    -   Save to `chrome.storage.local`.
+
+-   Remove:
+
+    -   Each has a "Remove" button.
+
+-   Display:
+
+    -   Whitelist: hyperlinks
+
+    -   Blacklist: plain text
+
+    -   Both: collapsible lists
+
+Reminder Features:
+
+-   Upload image:
+
+    -   Stored via `chrome.storage.local`.
+
+    -   Used in `reminder.html`.
+
+-   Custom reminder message:
+
+    -   Text area input → saved to storage → injected safely using `.textContent` (never `.innerHTML` with raw input).
+
+-   Import/Export:
+
+    -   Allow export of all settings (whitelist, blacklist, allowedTopics, filterLevel) to JSON.
+
+    -   Allow JSON import to restore settings.
+
+* * * * *
+
+**YOUTUBE FILTERING**
+
+1.  **Topic Preferences**
+
+-   Add:
+
+    -   Max 10 topics
+
+    -   Each max 20 characters
+
+    -   No duplicates
+
+    -   Auto-sorted alphabetically (for cache matching only, popup list stays unsorted)
+
+    -   Stored in `chrome.storage.local.allowedTopics`
+
+-   Remove:
+
+    -   Remove button per topic
+
+1.  **Filter Level**
+
+-   Stored in `chrome.storage.local.filterLevel`
+
+-   Defaults to `strict` (saves API calls)
+
+-   Options:
+
+    -   `strict`: requires clear match
+
+    -   `lenient`: allows broader relation
+
+1.  **Search Query Filtering**
+
+-   Triggered when `search_query` in URL
+
+-   Input sanitized and truncated (max 35 characters)
+
+-   Sanitization allows:
+
+    -   Letters, numbers, underscores
+
+    -   Spaces and selected symbols: - + # $ % & * . / ? ! ' ,
+
+    -   All other characters removed
+
+-   If no allowed topics, AI check is skipped
+
+-   Otherwise:
+
+    -   AI call is made via Cloudflare Worker (proxy)
+
+    -   AI response must be "yes" or "no"
+
+    -   "no" → redirect to `reminder.html`
+
+* * * * *
+
+**AI CHECK FLOW (via Cloudflare Worker)**
+
+-   `aicheck.js` handles request:
+
+    -   `callAI(cleanPhrase, cleanTopics, filterLevel)`
+
+-   `cleanPhrase`: trimmed/sanitized query
+
+-   `cleanTopics`: sorted, deduped array (up to 10)
+
+-   `filterLevel`: "strict" or "lenient"
+
+-   Worker returns "yes" or "no" only
+
+-   If "no", redirect user
+
+* * * * *
+
+**WHAT TO TELL USERS IF FILTER FAILS OR IS TOO STRICT**
+
+If something gets blocked that shouldn't be:
+
+1.  Try using broader topics (e.g. "academics" instead of "c++").
+
+2.  Add more context to your search queries.
+
+3.  Be aware that short or informal phrases may get filtered incorrectly.
