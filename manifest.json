@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "StudyFilter",
   "version": "0.0.0.1",
-  "description": "Block distracting sites and stay focused on your goals",
+  "description": "View only certain subreddits and youtube videos, block chosen websites and a customizable redirect page",
 
   
   "permissions":["tabs","storage","scripting"],
