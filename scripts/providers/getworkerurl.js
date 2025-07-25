@@ -1,4 +1,4 @@
-const PRODUCTION_ID = 'your_production_extension_id';  // Your production extension ID
+const PRODUCTION_ID = 'gbnlpahokjogkedhaofipdeihbglaned';  // Your production extension ID
 const DEVELOPMENT_ID = 'mjgaobnicecibpidlocbcpejjclknljf';
 const UNPACKED_WORKER_URL = 'https://youtube-filter-worker-unpacked.spenz.workers.dev';
 
