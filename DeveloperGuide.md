@@ -18,7 +18,7 @@
 
 Main categories in `manifest.json`:
 
--   `"permissions"` → e.g. tabs, scripting, storage
+-   `"permissions"` → e.g. tabs,  storage
 
 -   `"host_permissions"` → domains like `youtube.com`, `reddit.com`
 
@@ -28,9 +28,7 @@ Common permissions:
 
 -   `storage` → Save user settings like whitelist, blacklist, etc.
 
--   `scripting` → Inject JS into pages.
-
--   `host_permissions` → Allow matching specific websites.
+-   `host_permissions` → All URLS to allow matching of specific websites.
 
 * * * * *
 
