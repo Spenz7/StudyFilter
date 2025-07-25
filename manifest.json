@@ -5,7 +5,7 @@
   "description": "View only certain subreddits and youtube videos, block chosen websites and a customizable redirect page",
 
   
-  "permissions":["tabs","storage","scripting"],
+  "permissions":["tabs","storage"],
   "host_permissions":["<all_urls>"],
 
   "action": {
