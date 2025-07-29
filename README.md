@@ -1,5 +1,5 @@
 Tutorial link: https://youtu.be/BGrRMCJ_-5o
-
+Recommmended to pin the extension for easier use.
 **Version History:**
 
 -   **v1:** Customizable reminder page
