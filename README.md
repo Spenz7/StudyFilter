@@ -1,3 +1,20 @@
+## License
+
+This extension is released for personal, non-commercial use.
+
+You may:
+
+- Load it as an unpacked Chrome extension
+
+- Modify `reminder.html` for your own use (e.g., to display a custom message)
+
+You may not:
+
+- Modify, reuse, or redistribute any other code without permission
+
+See LICENSE for full terms.
+
+
 Quick demo link: https://youtu.be/bleLz4FqFiM
 
 Longer Tutorial link: https://youtu.be/BGrRMCJ_-5o
