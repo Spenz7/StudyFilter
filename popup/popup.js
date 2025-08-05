@@ -84,6 +84,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
+
+  // Sync common sites checkboxes with storage
+  chrome.storage.local.get(["blacklist"], ({ blacklist = [] }) => {
+    document.querySelectorAll("#common-sites-list input[type='checkbox']").forEach(cb => {
+      cb.checked = blacklist.includes(cb.dataset.url);
+    });
+  });
+
 });
 
 // Export settings (with image and reminder text)
@@ -180,4 +188,24 @@ document.getElementById('save-reminder-text').addEventListener('click', async ()
   const lines = textarea.value.split('\n').slice(0, 3);
   await chrome.storage.local.set({ reminderTextLines: lines });
   if (status) status.textContent = "Reminder text saved.";
+});
+
+// Handle changes to common site checkboxes
+document.addEventListener("change", (event) => {
+  if (event.target.matches("#common-sites-list input[type='checkbox']")) {
+    const checkbox = event.target;
+    const domain = checkbox.dataset.url;
+
+    chrome.storage.local.get(["blacklist"], ({ blacklist = [] }) => {
+      let updated = [...blacklist];
+
+      if (checkbox.checked) {
+        if (!updated.includes(domain)) updated.push(domain);
+      } else {
+        updated = updated.filter(item => item !== domain);
+      }
+
+      chrome.storage.local.set({ blacklist: updated });
+    });
+  }
 });
