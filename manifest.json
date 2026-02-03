@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "StudyFilter",
-  "version": "0.0.0.1",
+  "version": "0.0.0.2",
   "description": "View only certain subreddits and youtube videos, block chosen websites and a customizable redirect page",
 
   
