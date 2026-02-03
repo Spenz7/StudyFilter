@@ -31,7 +31,7 @@ Recommmended to pin the extension for easier use.
 
 -   **UNDER MAINTENANCE v3:** v2 + YouTube filtering (personal use using your own OPENAI/OPENROUTER API key) 
 
--   **v4:** v2 + YouTube filtering (public use)
+-   **v4:** v2 + YouTube filtering (public use) + Google filtering (public use)
 
 
 **Key Features:**
@@ -39,8 +39,8 @@ Recommmended to pin the extension for easier use.
 -   **Reddit Filtering:**\
     Use a whitelist of your favorite subreddits to allow only those. All other Reddit pages (e.g., `reddit.com` or unlisted subreddits) are blocked.
 
--   **YouTube Filtering:**\
-    Uses AI-based topic filtering on search queries and video titles. Only YouTube uses AI filtering.
+-   **YouTube + Google Filtering:**\
+    Uses AI-based topic filtering on search queries. Uses AI filtering.
 
 -   **Other Websites:**\
     A simple blacklist blocks distracting websites outside of Reddit and YouTube.
@@ -62,7 +62,7 @@ Recommmended to pin the extension for easier use.
 
 -   AI filtering is applied only on YouTube, checking if the search query or video title matches your allowed topics.
 
--   For YouTube search queries longer than 35 characters, only the first 35 characters are sent to the AI for evaluation (to optimize API usage).
+-   For search queries longer than 35 characters, only the first 35 characters are sent to the AI for evaluation (to optimize API usage).
 
 -   Reddit uses URL matching with whitelist/blacklist, no AI involved.
 
