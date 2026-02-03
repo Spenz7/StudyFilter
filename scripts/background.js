@@ -1,6 +1,8 @@
 // scripts/background.js
 import { handleReddit } from './handlers/reddithandler.js';
 import { handleYouTube } from './handlers/youtubehandler.js';
+import { handleGoogle } from './handlers/googlehandler.js';
+
 import { checkUrlAgainstLists } from './utils/urlaccessmanager.js';
 
 console.log('[Background] Service worker loaded');
@@ -52,6 +54,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
     if (domain.includes('youtube.com')) {
       await handleYouTube(tabId, tab.url);
+      return;
+    }
+
+    if (domain.startsWith('google.')) {
+      await handleGoogle(tabId, tab.url);
       return;
     }
 
