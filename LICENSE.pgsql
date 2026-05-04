@@ -1,9 +1,14 @@
+## License
+
 Copyright (c) 2025 Spencer Ng
 
-Permission is granted to download and use this source code solely for running the extension in unpacked mode for personal, non-commercial use.
+This project is provided for personal, non-commercial use only.
 
-You may modify `reminder.html` for personalization purposes only.
+You may:
+- Load and run the extension in unpacked mode
+- Modify `reminder.html` for personal customization
 
-All other files may not be copied, modified, distributed, or reused in any form without explicit written permission from the author.
+You may not:
+- Copy, modify, reuse, or redistribute any other part of the code without explicit permission
 
-This software is provided "as is", without warranty of any kind.
+This software is provided "as is", without warranty of any kind.  
